@@ -59,10 +59,9 @@ export default (state=[], action)=>{
             console.log("after update", state);
             return state;
         case types.compTask:
-          console.log("completed call");
-          
-            return state.map(todo =>
-                todo.id === action.id ?
+          console.log("completed call");          
+          return state.map(todo =>
+                todo.id === action.payload.id ?
                   {
                     ...todo,
                     completed: !todo.completed,

@@ -15,6 +15,7 @@ class DisplayTodos extends Component {
             },
             status: false
         }
+        this.handleChange = this.handleChange.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
@@ -65,27 +66,41 @@ class DisplayTodos extends Component {
                              <table className="table">
                             <tbody>
                              {editingTask.id === todo.id?
-                        <tr><td><input type="text" value={editingTask.task} onChange={this.handleChange}/>
-                        <button onClick={this.updateTask}>update</button>
+                        <tr><td>
+                           <div className="input-group mb-3">
+                         <input type="text" className="form-control"
+                          placeholder="Enter your task here"
+                            //  ref="myTaskVal"
+                          value={editingTask.task}
+                         onChange={this.handleChange}
+                         />
+                        <div className="input-group-append">
+                        <button className="btn btn-primary" type="button"
+                        onClick={this.updateTask}
+                        >Update!</button>
+                        </div>
+                        </div>
+                            {/* <input type="text" value={editingTask.task} onChange={this.handleChange}/>
+                        <button onClick={this.updateTask}>update</button> */}
                         </td>
                         </tr>
                         :
                                      <tr>
-                                     <td colSpan={4}>
-                                     {/* <div className="pretty p-icon p-curve p-has-indeterminate"> */}
-                                        <input type="checkbox" style={{width:'2%', color:'white'}} />
-                                      {/* <div className="state text-white"> */}
-                                        {/* <i className="icon mdi mdi-check"></i> */}
-                                     <label>{todo.completed?<strike>{todo.text}</strike>: todo.text}</label>
-                                     {/* </div> */}
-                                    {/* </div> */}
+                                     <td>
+                                     <div className="pretty p-icon p-curve  p-default">
+                                        <input type="radio" name="radio66"  onChange={() =>this.props.compTask({id: todo.id})} />
+                                      <div className="state p-warning">
+                                        <i className="icon mdi mdi-check"></i>
+                                     <label style={{color:'#fefbfb', fontSize:'120%'}}>{todo.completed?<strike>{todo.text}</strike>: todo.text}</label>
+                                     </div>
+                                    </div>
                                         {/* <label>Friends</label> */}
                                      </td>
                                      <td >
                                          <div>
-                                     <button onClick={()=>this.props.delTask({id: todo.id})}>X</button>
-                                      <button onClick={()=>{this.editBox(todo.id, todo.text)}}>edit</button>
-                                     <button onClick={() =>this.props.completedTask({id: todo.id})}>Completed</button>
+                                     <button className="btn btn-danger" type="button" onClick={()=>this.props.delTask({id: todo.id})}>X</button>--
+                                      <button className="btn btn-primary" type="button" onClick={()=>{this.editBox(todo.id, todo.text)}}>edit</button>
+                                     {/* <button onClick={() =>this.props.compTask({id: todo.id})}>Completed</button> */}
                                          </div>
                                      </td>
                                      </tr>                                

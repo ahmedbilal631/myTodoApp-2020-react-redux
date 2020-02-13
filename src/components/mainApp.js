@@ -12,9 +12,15 @@ class MainApp extends Component {
             <div className="myMainBody">
                 <div className="myNav"><p className="myNavLogoText">MY-TODO</p></div>
                 <hr/>
-                <div className="myTodoContainer container">TodoContainer
+                <div className="myTodoContainer container">
                 <AddTodoBox />
+                <hr/>
+                <hr/>
                 <DisplayTodos />
+                </div>
+                <div>
+                    <hr/>
+                    <p style={{textAlign:"center"}}>&copy;mySoftRack-2020</p>
                 </div>
             </div>
         )
