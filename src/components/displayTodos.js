@@ -61,12 +61,82 @@ class DisplayTodos extends Component {
             <label>Friends</label>
         </div>
     </div> */}
+
+<ul className="collection with-header">
+{tasks.map((todo, i)=>(
+    <li key={todo.id} className="collection-item">
+
+                             <div className="container">
+                             {editingTask.id === todo.id?
+                            <div className="row">
+                            <div className="input-field col s9 l9 m9">
+                            <input id="txtEditTodo"
+                                 style={{color: 'darkcyan'}}
+                                 placeholder="Enter your task here"
+                                 ref="myTaskVal"
+                                 autoFocus
+                                 value={editingTask.task}
+                                onChange={this.handleChange}
+                                type="text" className="validate" />
+                            <label for="txtEditTodo" style={{color: 'darkcyan', fontSize:'120%'}}>Update Todo!</label>
+                            </div>
+                            <div className="col s3 m3 l3">
+                           <br/>
+                            <button className="btn waves-effect waves-light"
+                            onClick={this.updateTask} style={{fontWeight:'bold'} }
+                            type="button" name="action">Update!</button>
+                            </div>
+                            </div>
+                        :
+                        <div className="row" style={{color:"darkcyan", fontSize:"120%",fontWeight:"500", textAlign:"justify"}}>
+                                {todo.completed?<strike style={{color:"yellow"}}>{todo.text}</strike>: todo.text}
+                                <i className="secondary-content">
+                                     <button className="btn" style={{fontWeight:'bold'}} onClick={()=>this.props.delTask({id: todo.id})}>X</button>..
+                                      <button className="btn" style={{fontWeight:'bold'}} onClick={()=>{this.editBox(todo.id, todo.text)}}>Edit</button>..
+                                      <button className="btn" style={{fontWeight:'bold'}} onClick={() =>this.props.compTask({id: todo.id})}>Completed!</button></i>
+                                </div>
+                                }
+                                </div>
+                        </li>
+
+))}
+</ul>
+
+{
+                                //      <td>
+                                //      <div className="pretty p-icon p-curve  p-default">
+                                //         <input type="radio" name="radio66"  onChange={() =>this.props.compTask({id: todo.id})} />
+                                //       <div className="state p-warning">
+                                //         <i className="icon mdi mdi-check"></i>
+                                //      <label style={{color:'#fefbfb', fontSize:'120%'}}></label>
+                                //      </div>
+                                //     </div>
+                                //      </td>
+                                //      <td >
+                                //          <div>
+                                //      <button className="btn btn-danger" type="button" onClick={()=>this.props.delTask({id: todo.id})}>X</button>--
+                                //       <button className="btn btn-primary" type="button" onClick={()=>{this.editBox(todo.id, todo.text)}}>edit</button>
+                                //          </div>
+                                //      </td>
+                                //      </tr>                                
+                                // }
+                                // </tbody>
+                                // </table>
+                                // </div>
+                   
+                            }
+
+
+
+
+
+{/*
                  {tasks.map((todo, i)=>(
                          <div key={todo.id} className="table-responsive">
-                             <table className="table">
+                         <table className="table">
                             <tbody>
-                             {editingTask.id === todo.id?
-                        <tr><td>
+                            {editingTask.id === todo.id?
+                                <tr><td>
                            <div className="input-group mb-3">
                          <input type="text" className="form-control"
                           placeholder="Enter your task here"
@@ -82,7 +152,7 @@ class DisplayTodos extends Component {
                         </div>
                             {/* <input type="text" value={editingTask.task} onChange={this.handleChange}/>
                         <button onClick={this.updateTask}>update</button> */}
-                        </td>
+{/*                        </td>
                         </tr>
                         :
                                      <tr>
@@ -95,13 +165,13 @@ class DisplayTodos extends Component {
                                      </div>
                                     </div>
                                         {/* <label>Friends</label> */}
-                                     </td>
+   {/*                                  </td>
                                      <td >
                                          <div>
                                      <button className="btn btn-danger" type="button" onClick={()=>this.props.delTask({id: todo.id})}>X</button>--
                                       <button className="btn btn-primary" type="button" onClick={()=>{this.editBox(todo.id, todo.text)}}>edit</button>
                                      {/* <button onClick={() =>this.props.compTask({id: todo.id})}>Completed</button> */}
-                                         </div>
+ {/*                                        </div>
                                      </td>
                                      </tr>                                
                                 }
@@ -109,6 +179,7 @@ class DisplayTodos extends Component {
                                 </table>
                                 </div>
                      ))}
+                            */}
             </div>
         )
     }
