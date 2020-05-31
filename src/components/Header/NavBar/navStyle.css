@@ -1,0 +1,13 @@
+.myNav{
+    background-color: #056910;
+}
+
+.myNav ul {
+    float: right;
+    /* margin-right: 3%; */
+}
+.myNavItem{
+    margin-right: 1em;
+    font-family:  sans-serif;
+    font-weight: bold;
+}

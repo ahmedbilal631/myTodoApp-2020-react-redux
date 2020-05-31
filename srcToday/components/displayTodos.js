@@ -2,7 +2,11 @@ import React, { Component } from 'react'
 
 //here the redux will be imported
 import {connect} from 'react-redux';
-import {delTask, editTask, compTask} from '../redux/actions';
+import {delTask, editTask, compTask, loadData} from '../redux/actions';
+
+//importing firebase here
+import myTodoDB from '../firebase/config';
+
 
 class DisplayTodos extends Component {
     constructor(){
@@ -17,12 +21,26 @@ class DisplayTodos extends Component {
         }
         this.handleChange = this.handleChange.bind(this);
     }
+    componentDidMount(){
+        this.props.loadData();
+        // myTodoDB.once('value').then(snapShot=>{
+        //     snapShot.forEach(item=>{
+        //         this.state.tasks.push({
+        //             id: item.key, text: item.payload.text
+        //         })
+        //     })
+        // })   
+    }
 
     componentWillReceiveProps(nextProps){
         console.log(nextProps.tasks,"next props")
         this.setState({
             tasks : nextProps.tasks
         })    
+    }
+
+    componentWillUpdate(){
+        console.log(this.state.tasks);
     }
 
     handleChange=event=>{
@@ -191,4 +209,4 @@ const mapStateToProps=(state)=>{
     }
 };
 
-export default connect(mapStateToProps,{editTask, delTask, compTask})(DisplayTodos);
+export default connect(mapStateToProps,{editTask, delTask, compTask, loadData})(DisplayTodos);

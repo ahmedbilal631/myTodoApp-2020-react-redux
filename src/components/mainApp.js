@@ -1,29 +1,18 @@
 import React, { Component } from 'react'
-import './style/myStyle.css';
-
-import AddTodoBox from './addTodo';
-import DisplayTodos from './displayTodos';
+import SignUp from './Authentication/signUp';
+// import NavBar from './Header/NavBar/navBar';
 
 
 
 class MainApp extends Component {
     render() {
         return (
-            <div className="myMainBody">
-                <div className="myNav"><p className="myNavLogoText">MY-TODO</p></div>
-                <hr/>
-                <div className="myTodoContainer container">
-                <AddTodoBox />
-                <hr/>
-                <hr/>
-                <DisplayTodos />
-                </div>
-                <div>
-                    <hr/>
-                    <p style={{textAlign:"center"}}>&copy;mySoftRack-2020</p>
-                </div>
+            <div style={{height: 100}}>
+                {/* <NavBar /> */}
+                <SignUp />
             </div>
         )
     }
 }
+
 export default MainApp;
