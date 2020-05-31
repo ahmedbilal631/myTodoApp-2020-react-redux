@@ -7,7 +7,7 @@ import SignUp from './Authentication/signUp';
 class MainApp extends Component {
     render() {
         return (
-            <div style={{height: 100}}>
+            <div style={{height: 100}} >
                 {/* <NavBar /> */}
                 <SignUp />
             </div>

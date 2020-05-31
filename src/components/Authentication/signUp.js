@@ -6,19 +6,28 @@ import './signUpStyle.css';
 class SignUp extends Component {
     render() {
         return (
-            <div>
-
-            <div className='myBody'>
+              <div className='mX'>
                 <NavBar />
+                <div className="myBody">
+
+                <div className="container ">
                 <div className="myContainer">
-                    <div className="myFormTitle">Sign Up</div>
+
+                    <div className=" row">
+                        <div className="col s12 m12 l12 xl12">
+                         <p className="myFormTitle">
+                              Sign Up
+                             </p>
+                        </div>
+                        </div>
                     {/* <form action="">
                         <div style={{display: 'flex', flexDirection: 'row'}}>
                         <span className='material-icons' id='icon' style={{float:'left', marginTop: '0.65em'}}>account_circle</span>
                         <input type="text" className='myTxtBox myTxtname'  placeholder="Full Name"/>
                         </div>
                     </form> */}
-                <form className="myForm">
+                    <div className="myForm row">
+                <form className="XX">
                     <div className="input-field">
                     <i className="myIcon material-icons prefix ">account_circle</i>
                     <input id="icon_prefix" type="text" className="myTxtBox" />
@@ -43,11 +52,21 @@ class SignUp extends Component {
                         <button className="myBtn btn ">SIGN UP</button>
                     </div>
                     </form>
-
-                    </div>
-                </div>
-                    <SubFooter />
+                    <div className="row">
+                    <div className="col s6 m6 l6 xl6 offset-s6"></div>
+                    <div className="col s6 m6 l6 xl6 offset-s6">
+                       <p className="myCreateNewAcc">
+                           Create new account?
+                           </p> 
                         </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    <SubFooter />
+                </div>
+                  
         )
     }
 }
