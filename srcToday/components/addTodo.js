@@ -26,10 +26,13 @@ class AddTodo extends Component {
     }
 
     adder=()=>{
+        console.log(this.state);
+        
         this.props.addTask({text: this.state.text});
         this.setState({
             text: ''
         });
+        // e.preventDefault();
     }
     render() {
         const {text} = this.state;

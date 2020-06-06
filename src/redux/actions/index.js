@@ -26,9 +26,17 @@ import types from './actionsTypes';
 //this is the action to add a new task in the list (SADA JEYA KAM)
 export const addUser =(payload)=>{
     return {
-        type: types.addTask,
+        type: types.addUser,
         payload
     }
 };
 
 //..................................................
+
+// to get load the stored data from database to local redux store state...
+export const loadData = ()=>{
+    console.log("yes call for load");
+    return {
+        type: types.loadData
+    }
+};

@@ -8,12 +8,14 @@ export default (state=[], action)=>{
             console.log('yes Add call');
             return state=[
                 ...state,
-                {
+                
                   // id: Math.floor(Math.random() * 1000),
                 //   completed: false,
-                  text: action.payload.text,
-                }];
-                console.log('after add statee', state);
+                 action.payload.text,
+                ];
+        case types.loadData:
+          console.log(" data is loading," + state);
+          return state;
         default:
             return state;
             }}

@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import {addUser, loadData} from '../../redux/actions/index';
 
 
-class SignUp extends Component {
+class SignIn extends Component {
     constructor(){
         super();
         this.state ={
@@ -55,7 +55,7 @@ class SignUp extends Component {
                     <div className=" row">
                         <div className="col s12 m12 l12 xl12">
                          <p className="myFormTitle">
-                              Sign Up
+                              Sign in
                              </p>
         <p>{this.state.name}</p>
                         </div>
@@ -68,38 +68,38 @@ class SignUp extends Component {
                     </form> */}
                     <div className="myForm row">
                 {/* <form className="XX"> */}
-                    <div className="input-field">
+                    {/* <div className="input-field">
                     <i className="myIcon material-icons prefix ">account_circle</i>
                     <input id="icon_prefix" type="text" className="myTxtBox"
                                                        value={this.state.name}
                                                        onChange={this.handleChange}                    
                     />
-                     <label htmlFor="icon_prefix" className="myTxtLable">Full Name</label>
-                     </div>
+                     <label htmlFor="icon_prefix" className="myTxtLable">First Name</label>
+                     </div> */}
                      <div className="input-field">
                     <i className="material-icons prefix">email</i>
                     <input id="email" type="email" className="myInputBox" />
                      <label htmlFor="email">Email</label>
                      </div>
-                    <div className="input-field">
+                    {/* <div className="input-field">
                      <i className="material-icons prefix">phone</i>
                          <input id="icon_telephone" type="tel" className="myInputBox" />
-                     <label htmlFor="icon_telephone">Cell Number</label>
-                    </div>
+                     <label htmlFor="icon_telephone">Telephone</label>
+                    </div> */}
                     <div className="input-field">
                     <i className="material-icons prefix">lock</i>
                     <input id="password" type="password" className="myInputBox" />
                      <label htmlFor="password">Password</label>
                      </div>
                     <div>
-                        <button className="myBtn btn " onClick={this.adder}>SIGN UP</button>
+                        <button className="myBtn btn " onClick={this.adder}>SIGN IN</button>
                     </div>
                     {/* </form> */}
                     <div className="row">
                     <div className="col s6 m6 l6 xl6 offset-s6"></div>
                     <div className="col s6 m6 l6 xl6 offset-s6">
                        <p className="myCreateNewAcc">
-                           Already have an account?
+                           Create new account?
                            </p> 
                         </div>
                     </div>
@@ -120,4 +120,4 @@ const mapStateToProps=(state)=>{
     }
 };
 
-export default connect(mapStateToProps, {addUser, loadData})(SignUp);
+export default connect(mapStateToProps, {addUser, loadData})(SignIn);

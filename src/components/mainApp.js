@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import SignUp from './Authentication/signUp';
 // import NavBar from './Header/NavBar/navBar';
 
+import Routes from '../routes/index';
+
 
 
 class MainApp extends Component {
@@ -9,7 +11,8 @@ class MainApp extends Component {
         return (
             <div style={{height: 100}} >
                 {/* <NavBar /> */}
-                <SignUp />
+                <Routes />
+                {/* <SignUp /> */}
             </div>
         )
     }
