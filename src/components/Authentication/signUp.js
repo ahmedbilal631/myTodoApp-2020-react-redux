@@ -3,6 +3,8 @@ import NavBar from '../Header/NavBar/navBar';
 import SubFooter from '../Footer/Sub_Footer';
 import './signUpStyle.css';
 
+import {Link} from 'react-router-dom';
+
 import {connect} from 'react-redux';
 import {addUser, loadData} from '../../redux/actions/index';
 
@@ -11,7 +13,8 @@ class SignUp extends Component {
     constructor(){
         super();
         this.state ={
-            name : []
+            name : '',
+            names : []
     }}
 
     componentDidMount(){
@@ -20,9 +23,9 @@ class SignUp extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        console.log(nextProps.name,"next props")
+        console.log(nextProps.names,"next props")
         this.setState({
-            name : nextProps.name
+            names : nextProps.names
         })    
     }
 
@@ -98,9 +101,11 @@ class SignUp extends Component {
                     <div className="row">
                     <div className="col s6 m6 l6 xl6 offset-s6"></div>
                     <div className="col s6 m6 l6 xl6 offset-s6">
+                       <Link to='/signin'>
                        <p className="myCreateNewAcc">
                            Already have an account?
                            </p> 
+                       </Link>
                         </div>
                     </div>
                     </div>
@@ -116,7 +121,7 @@ class SignUp extends Component {
 //here the redux data will be converted into props
 const mapStateToProps=(state)=>{
     return{
-        name: state.usersReducer
+        names: state.users
     }
 };
 

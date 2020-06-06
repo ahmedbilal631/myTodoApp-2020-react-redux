@@ -3,6 +3,8 @@ import NavBar from '../Header/NavBar/navBar';
 import SubFooter from '../Footer/Sub_Footer';
 import './signUpStyle.css';
 
+import {Link} from 'react-router-dom';
+
 import {connect} from 'react-redux';
 import {addUser, loadData} from '../../redux/actions/index';
 
@@ -98,9 +100,11 @@ class SignIn extends Component {
                     <div className="row">
                     <div className="col s6 m6 l6 xl6 offset-s6"></div>
                     <div className="col s6 m6 l6 xl6 offset-s6">
+                        <Link to="/signup">
                        <p className="myCreateNewAcc">
                            Create new account?
                            </p> 
+                        </Link>
                         </div>
                     </div>
                     </div>

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import * as routes from "./routesPath";
 
 //pages
+import WelComePage from '../components/landing/welCome';
 import SignUpPage from '../components/Authentication/signUp';
 import SignInPage from '../components/Authentication/signIn';
 
@@ -14,6 +15,7 @@ export default class Routes extends React.Component {
     return (
       <Router>
         <Switch>
+          <Route exact path={routes.WEL_COME} component={WelComePage} />
           {/* <Route exact path={routes.HOME_PAGE} component={HomePage} /> */}
           {/* <Route exact path={routes.ABOUT_PAGE} component={AboutPage} /> */}
           <Route exact path={routes.SIGN_IN} component={SignInPage} />
