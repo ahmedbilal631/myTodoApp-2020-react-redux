@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import NavBar from '../Header/NavBar/navBar';
+import NavBar from '../Header/NavBar2/navBar2';
+import Slider from '../Header/Slider/slider';
 import SubFooter from '../Footer/Sub_Footer';
-import './signUpStyle.css';
+// import './signUpStyle.css';
 
 import {Link} from 'react-router-dom';
 
@@ -9,7 +10,7 @@ import {connect} from 'react-redux';
 import {addUser, loadData} from '../../redux/actions/index';
 
 
-class SignUp extends Component {
+class Home extends Component {
     constructor(){
         super();
         this.state ={
@@ -85,6 +86,7 @@ class SignUp extends Component {
         return (
               <div className='mX'>
                 <NavBar />
+                <Slider />
                 <div className="myBody">
                 <div className="container ">
                 <div className="myContainer">
@@ -168,4 +170,4 @@ const mapStateToProps=(state)=>{
     }
 };
 
-export default connect(mapStateToProps, {addUser, loadData})(SignUp);
+export default connect(mapStateToProps, {addUser, loadData})(Home);

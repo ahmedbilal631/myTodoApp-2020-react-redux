@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './navStyle.css';
 
+import {Link} from 'react-router-dom';
+
 // import Logo_White from '../../../media/logo_white.png';
 
 class NavBar extends Component {
@@ -13,7 +15,11 @@ class NavBar extends Component {
                       {/* </span> */}
                       <ul>
                           <li className="myNavItem">Help?</li>
-                          <li className="myNavItem">About us</li>
+                          <li className="myNavItem">
+                              <Link to='/about'>
+                              About us
+                              </Link>
+                              </li>
                       </ul>
                  </nav>
             </div>
