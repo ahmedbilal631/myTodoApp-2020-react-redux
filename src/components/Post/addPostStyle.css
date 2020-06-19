@@ -1,3 +1,10 @@
+.myCardBtnSec{
+    border-top: 1px groove lightslategray;
+    padding-top: 1px;
+    padding-bottom: 5px;
+}
+
+
 .myAPBody{
     background-image: url('../../media/bg_signUp.jpg');
     /* height: '100%'; */
@@ -55,7 +62,7 @@
 }
 select{
     display: block;
-    border-color: teal;
+    border-color: none;
 }
 .myAPSelectDiv{
     border-color: teal;

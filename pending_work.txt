@@ -1,0 +1,20 @@
+#06132020
+
+Pending work
+>notifications
+>search
+>active posts
+>resolved posts
+>settings
+>help
+>feedback
+
+
+//
+#06182020
+>++old
+>email store for display posts
+>implement a filter in all display post
+to avoid in_active and resolved cases
+>Set cards for different displays
+>search filters

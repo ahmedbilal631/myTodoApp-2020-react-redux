@@ -6,14 +6,14 @@ import 'firebase/auth';
 
  // Your web app's Firebase configuration
  var firebaseConfig = {
-    apiKey: "AIzaSyCZYM6pGFWWyLKkQzltjf8P_rRWo71gWnskjcnkdsjnjckonx0",
-    authDomain: "myprojectmanager7891.firebaseapp.com",
-    databaseURL: "https://myprojectmanager7891.firebaseio.com",
-    projectId: "myprojectmanager7891",
-    storageBucket: "myprojectmanager7891.appspot.com",
-    messagingSenderId: "34295975011",
-    appId: "1:34295975011:web:ccf28391fe98kjnvkjdnlkdf32f8ae3c56",
-    measurementId: "G-3L4KS6N85E"
+    apiKey: "AIzaS 361 631 njckonx0",
+    authDomain: "myproje,
+    databaseURL: "https://.com",
+    projectId: "myproje
+    storageBucket: "myprojecot.com",
+    messagingSenderId: ",
+    appId: "1:34295975df32f8ae3c56",
+    measurementId: "G-,
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);

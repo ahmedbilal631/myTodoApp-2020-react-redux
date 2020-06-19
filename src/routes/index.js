@@ -8,8 +8,10 @@ import AboutPage from '../components/About/about';
 import SignUpPage from '../components/Authentication/signUp';
 import SignInPage from '../components/Authentication/signIn';
 import HomePage from '../components/Home/home';
-import AddPostPage from '../components/AddPost/addPost';
-import EditProfilePage from '../components/Edit_Profile/edit_profile';
+// import AddPostPage from '../components/AddPost/addPost';
+import AddPostPageX from '../components/Post/add_post';
+import ProfilePage from '../components/Edit_Profile/profile';
+import DisplayPostPage from '../components/Post/display_posts_page';
 
 
 export default class Routes extends React.Component {
@@ -24,8 +26,10 @@ export default class Routes extends React.Component {
           <Route exact path={routes.ABOUT_PAGE} component={AboutPage} />
           <Route exact path={routes.SIGN_IN} component={SignInPage} />
           <Route exact path={routes.SIGN_UP} component={SignUpPage} />
-          <Route exact path={routes.ADD_POST} component={AddPostPage} />
-          <Route exact path={routes.EDIT_PROFILE} component={EditProfilePage} />
+          {/* <Route exact path={routes.ADD_POST} component={AddPostPage} /> */}
+          <Route exact path={routes.ADD_POSTX} component={AddPostPageX} />
+          <Route exact path={routes.PROFILE} component={ProfilePage} />
+          <Route exact path={routes.DISPLAY_POSTS} component={DisplayPostPage} />
           {/* <Route exact path={routes.SEARCH} component={SearchPage} /> */}
           {/* <Route exact path={routes.CHECKOUT} component={CheckOutPage} /> */}
           {/* <Route exact path={routes.LEARNER_DRIVER} component={LearnerDriver} /> */}

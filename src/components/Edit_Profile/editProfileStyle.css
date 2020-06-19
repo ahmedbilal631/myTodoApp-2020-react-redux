@@ -1,3 +1,30 @@
+/*profile & editing*/
+.myProfileItemTitle{
+    font-size: 20px;
+    font-weight: bolder;
+    text-align: left;
+    text-indent: 2%;
+    color: teal;
+}
+.myAdBox{
+    margin-top: 2%;
+    margin-bottom: 5%;
+}
+.myPageTitle{
+    font-size: 35px;
+    font-weight: bolder;
+    color: teal;
+    text-align: center;
+}
+.mySideLinksTitle{
+    font-size: 16px;
+    font-weight: 800;
+}
+.mySideLinksList{
+    font-size: 14px;
+    font-weight: 800;
+}
+
 .myAPBody{
     background-image: url('../../media/bg_signUp.jpg');
     /* height: '100%'; */

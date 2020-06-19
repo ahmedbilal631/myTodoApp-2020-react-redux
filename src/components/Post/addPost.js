@@ -6,7 +6,7 @@ import './addPostStyle.css';
 import {Link} from 'react-router-dom';
 
 import {connect} from 'react-redux';
-import {addUser, loadData} from '../../redux/actions/index';
+import {addUser, loadData} from '../../redux/actions/UserAction';
 
 
 class AddPost extends Component {

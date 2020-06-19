@@ -4,7 +4,7 @@ import './styleSF.css';
 class SubFooter extends Component {
     render() {
         return (
-            <div className="my_sub_footer">
+            <div className="my_sub_footer" style={{marginTop: '0px'}}>
                 <div className="myCopyright">&copy;mySoftRack-2020</div>
                 <div className="mySF_items_list">
                     <span className="mySF_item">admin</span> ||

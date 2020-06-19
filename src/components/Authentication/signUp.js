@@ -6,7 +6,7 @@ import './signUpStyle.css';
 import {Link} from 'react-router-dom';
 
 import {connect} from 'react-redux';
-import {addUser, loadData} from '../../redux/actions/index';
+import {addUser, loadData} from '../../redux/actions/UserAction/index';
 
 
 class SignUp extends Component {

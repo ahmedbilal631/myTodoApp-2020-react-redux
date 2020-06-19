@@ -1,0 +1,15 @@
+.myHomeBody{
+    background-image: url('../../media/slider/slide_pic_3.jpg');
+    height: 100vh;
+    background-position: center;background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+.mySliderContainer{
+    display: flex;
+    flex-direction: row;
+}
+.mySliderStyle{
+    justify-content: center;
+}

@@ -2,6 +2,7 @@
 
 export default {
     addUser: 'ADD_USER',
+    updateUser: 'UPDATE_USER',
     delTask: 'DELETE_TASK',
     compTask: 'COMPLETE_TASK',
     editTask: 'EDIT_TASK',

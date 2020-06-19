@@ -6,6 +6,7 @@ import {Link} from 'react-router-dom';
 // import Logo_White from '../../../media/logo_white.png';
 
 class NavBar extends Component {
+    
     render() {
         return (
             <div>
