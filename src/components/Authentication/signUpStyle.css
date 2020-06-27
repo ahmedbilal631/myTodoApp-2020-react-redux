@@ -68,5 +68,15 @@
     text-align: right;
     font-size: 1em;
     color: #056910;
+    
     font-weight: 600;
+}
+.input-field input[type=text]{
+    border: none;
+}
+#mytxtname{
+    border: none;
+}
+#myTxtBoxCover{
+    border: none;
 }

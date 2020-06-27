@@ -73,45 +73,208 @@ class Home extends Component {
             new_profile_pic: ''
         });
     }
-    render() {
-      let get_posts = this.props.posts;
-      console.log(get_posts, 'get post');
-      let your_posts = get_posts.filter((item)=> item.post_creator_email == "abc@abc.abc");
-      console.log(your_posts, 'your post');
-//recent post array.
-      let recent_posts = [];
+//card creator
+Card_Creator=(display_list, user)=>{
+  return (
+    <div className="row">
+    {display_list.length !== 0?                           
+    display_list.map((item, index)=>(
+        <div className="col s12 m6 l6 xl3" key={item.post_id}>
+        <div className="card sticky-action">
+        <div className="card-content row">
+                <div className="col s6 m6 l6 xl6">
+                <i className="material-icons left" title="follow">star_border</i>
+                </div>
+                <div className="col s6 m6 l6 xl6">
+                <i className="material-icons right" title="share">share</i>
+                </div>
+            </div>
+         <div className="card-image waves-effect waves-block waves-light">
+        <img className="activator" src={item.dp_image} alt="images/office.jpg" />
+        </div>
+        <div className="card-content">
+            <div className="row">
+                <div className="col s8 m8 l8 xl8">
+                <span className="card-title activator grey-text text-darken-4">{item.name}</span>
+                </div>
+                <div className="col s4 m4 l4 xl4">
+                <i className="material-icons activator right" title="details">turned_in</i>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col s6 m6 l6 xl6">
+                <span className="grey-text text-darken-4">Status</span>
+                </div>
+                <div className="col s6 m6 l6 xl6">
+              <span className="myItemsVals teal-text text-darken-3">{(item.status).toUpperCase()}</span>
+                </div>
+            </div>
 
+            <div className="row">
+                <div className="col s6 m6 l6 xl6">Country -</div>
+              <div className="myItemsVals col s6 m6 l6 xl6">{item.country}</div>
+            </div>
+            <div className="row">
+                <div className="col s6 m6 l6 xl6">Region -</div>
+               <div className="myItemsVals col s6 m6 l6 xl6">{item.region}</div>
+            </div>
+            <div className="row">
+                <div className="col s6 m6 l6 xl6">Post date -</div>
+                <div className="myItemsVals col s6 m6 l6 xl6">{item.post_time.date}-{item.post_time.month}-{item.post_time.year}</div>
+            </div>
+            {
+                item.post_creator_email === user.email?
+                <div className="row">
+                <div className="col s6 m6 l6 xl6">Post status</div>
+                <div className="myItemsVals col s6 m6 l6 xl6">{item.post_status}</div>
+            </div>
+            :                                    
+            <div className="row">
+            <div className="col s6 m6 l6 xl6">Posted By</div>
+            <div className="myItemsVals col s6 m6 l6 xl6">{(item.post_creator_name).slice(0,7)}</div>
+            </div>
+            }
+        
+        </div>
+        <div className="card-action">
+            {item.post_creator_email === user.email?
+            <Link to="/edit_post" className='center'><i className="material-icons">edit</i> Edit Post</Link>
+            :
+            <Link to="#report" className='center'><i className="material-icons">flag</i> Report</Link>
+        }
+            {/* <Link to="/edit_post" className='right'>In-Active</Link> */}
+        </div>
+       <div className="card-reveal">
+           <div className="row">
+               <div className="col s12 m12 l12 xl12">
+               <span className="card-title grey-text text-darken-4"><i className="material-icons right">close</i></span>
+               </div>
+           </div>
+           <div className="row">
+               <div className="col s6 m6 l6 xl6">
+   <span className="card-title grey-text text-darken-4">{item.name}</span>
+               </div>
+               <div className="col s6 m6 l6 xl6">
+   <span className="card-title teal-text text-darken-4">{(item.status).toUpperCase()}</span>
+                   </div>
+           </div>
+           <div className="row">
+               <div className="myItemsVals col s12 m12 l12 xl12">Details</div>
+               <div className="col s12 m12 l12 xl12">
+               {item.description}.-
+               </div>
+           </div>
+           <div className="row">
+               <div className="myItemsVals col s12 m12 l12 xl12">Address</div>
+               <div className="col s12 m12 l12 xl12">
+               {item.location},{item.region},{item.country}
+               </div>
+           </div>
+           <div className="row">
+               <div className="myItemsVals col s12 m12 l12 xl12">Contact</div>
+               <div className="col s12 m12 l12 xl12">
+               contact info will be here.
+               </div>
+           </div>
+           <div className="row">
+               <div className="myItemsVals col s6 m6 l6 xl6">Follow</div>
+               <div className="myItemsVals col s6 m6 l6 xl6">
+                   Report
+               </div>
+           </div>
+       </div>
+       </div>
+       </div>
+))
+:
+<div className="col s12 m12 l12 xl12 center">
+Sorry, There is no post to display.
+</div>
+  }
+  </div>)
+}
+
+
+render() {
+  //get logged in user
+  let user = this.props.user;
+  let get_posts = this.props.posts.posts;
+    get_posts = get_posts.filter((item)=> item.post_status === 'active');
+      // console.log(get_posts, 'get post');
+      
+      //recent post array.
+      let recent_posts = [];
+      
       //to extract interest related posts
       let posts_array_length = get_posts.length;
-
+      
       //to get higher rank id
-      let higher_id = 1000;
-      for(let i = 0; i<posts_array_length; i = i+1){
-        if(get_posts[i].post_id > higher_id){
-          higher_id = get_posts[i].post_id;
-          console.log(higher_id, ' loop higher id');  
+      let your_posts_temp = get_posts.filter((item)=> item.post_creator_email === user.email);
+      your_posts_temp = your_posts_temp.filter((item)=> item.post_status === 'active');
+      let your_posts_array_length = your_posts_temp.length;
+      let higher_id_your = 1000;
+      for(let i = 0; i<your_posts_array_length; i = i+1){
+        if(your_posts_temp[i].post_id > higher_id_your){
+          higher_id_your = your_posts_temp[i].post_id;
+          // console.log(higher_id, ' loop higher id');  
         }
       }
-      //................................................      
-      //with indexing of recent posts
-      // const index = state.findIndex((item)=>{return item.id === action.payload.id});
-      let max_post = 4;
-      if((posts_array_length -1) >= 4){
-        for(let k = 0; k<max_post; k++){
-          const target_index =get_posts.findIndex((item) => { return item.post_id == higher_id});
-          if(target_index != -1){
-            // console.log(target_index, '+ve');
-            recent_posts.push(get_posts[target_index]);
-            higher_id = higher_id - 1;
+      //................................................
+      //your posts adjustment
+      let your_posts = [];
+      // console.log(your_posts, 'your post');
+      if((your_posts_temp.length -1)>= 4){
+        for(let k =0; k < 4; k++){
+          const target_index =your_posts_temp.findIndex((item) => { return item.post_id === higher_id_your});
+          if(target_index !== -1){
+            your_posts.push(your_posts_temp[target_index]);
+            higher_id_your = higher_id_your - 1;
           }else{
-            // console.log(target_index, '-ve');
             k= k -1;
-            higher_id = higher_id - 1;
+            higher_id_your = higher_id_your - 1;
           }
         }
       }else{
-        for(let k = 0; k<=(posts_array_length-1); k++){
-          const target_index =get_posts.findIndex((item) => { return item.post_id == higher_id});
+          for(let k =0; k < your_posts_temp.length; k++){
+            const target_index =your_posts_temp.findIndex((item) => { return item.post_id === higher_id_your});
+            if(target_index !== -1){
+              your_posts.push(your_posts_temp[target_index]);
+              higher_id_your = higher_id_your - 1;
+            }else{
+              k= k -1;
+              higher_id_your = higher_id_your - 1;
+            }
+          }
+        }
+        //................................................
+        //to get higher rank id
+        let higher_id = 1000;
+        for(let i = 0; i<posts_array_length; i = i+1){
+          if(get_posts[i].post_id > higher_id){
+            higher_id = get_posts[i].post_id;
+            // console.log(higher_id, ' loop higher id');  
+          }
+        }
+        //................................................ 
+        //with indexing of recent posts
+        // const index = state.findIndex((item)=>{return item.id === action.payload.id});
+        let max_post = 4;
+        if((posts_array_length -1) >= 4){
+          for(let k = 0; k<max_post; k++){
+            const target_index =get_posts.findIndex((item) => { return item.post_id === higher_id});
+            if(target_index != -1){
+              // console.log(target_index, '+ve');
+              recent_posts.push(get_posts[target_index]);
+              higher_id = higher_id - 1;
+            }else{
+              // console.log(target_index, '-ve');
+              k= k -1;
+              higher_id = higher_id - 1;
+            }
+          }
+        }else{
+          for(let k = 0; k<=(posts_array_length-1); k++){
+            const target_index =get_posts.findIndex((item) => { return item.post_id === higher_id});
           if(target_index != -1){
             recent_posts.push(get_posts[target_index]);
             higher_id = higher_id - 1;
@@ -120,7 +283,7 @@ class Home extends Component {
           }
         }
       }
-      console.log(recent_posts, 'for recent posts loop'); 
+      // console.log(recent_posts, 'for recent posts loop'); 
       //...............................................................
       
       //all post max display function
@@ -133,27 +296,27 @@ class Home extends Component {
       if(posts_array_length >= max_post){
         for(let i = 0; i<max_post; i++){
           target_post_index =  Math.round(Math.random() * (posts_array_length -1));
-          console.log('current target', target_post_index);
-          let temp_arr = previous_index_arr.filter((item)=> item == target_post_index);
+          // console.log('current target', target_post_index);
+          let temp_arr = previous_index_arr.filter((item)=> item === target_post_index);
           previous_index = temp_arr[temp_arr.length - 1];
           temp_arr= [];
-          console.log('current previous', previous_index, 'and temp', temp_arr);
+          // console.log('current previous', previous_index, 'and temp', temp_arr);
             if(target_post_index != previous_index){
             // if(target_post_index != previous_index[n]){
-              console.log('random indexes', target_post_index, posts_array_length-1);
+              // console.log('random indexes', target_post_index, posts_array_length-1);
               all_posts.push(get_posts[target_post_index]);
               previous_index_arr.push(target_post_index);
               // previous_indexX= target_post_index;
-              console.log('previous', previous_index_arr);                        
+              // console.log('previous', previous_index_arr);                        
             }else{
-              console.log(target_post_index, '-ve');
+              // console.log(target_post_index, '-ve');
               i = i - 1;
             }
           }
       }else{
         all_posts = get_posts;
       }
-      console.log('all posts', all_posts);
+      // console.log('all posts', all_posts);
       
 
 
@@ -181,140 +344,116 @@ class Home extends Component {
                 <MySlider/>
                     </div>
                 <div className="section white">
-      <div className="row container">
-        <h2 className="header">Lets Find</h2>
+      <div className="myAppIntroSpace row container">
+        <h2 className="myHeaderInHome header">Lets Find</h2>
         <p className="grey-text text-darken-3 lighten-3">
             You are welcome to Lets Find platform. We are present to here to help you always. 
             Lets find is a platform, where you can find your lost persons. This app can help you a lot in tracing your lost ones.</p>
+          <p>---------</p>
       </div>
     </div>
       <div className="parallax-container">
       <div className="parallax"><img src={Slide_Pic_5} alt="kjdsnf" /></div>
     </div>
+
     <div className="section white">
       <div className="row container">
         <h2 className="header">Recent Posts</h2>
-        <div className='row'>
-          {recent_posts.map((item, index)=>(
-            <div className="col s12 m6 l6 xl3" key={item.post_id}>
-                  <div className="card sticky-action">
-                              <div className="card-image waves-effect waves-block waves-light">
-                             <img className="activator" src={item.dp_image} alt="images/office.jpg" />
-                             </div>
-                             <div className="card-content">
-                             <span className="card-title activator grey-text text-darken-4">{item.name}<i className="material-icons right">more_vert</i></span>
-                   <div><span>Address : {item.location}</span> <span> , {item.country}</span></div>
-           
-                             <p><a href="#">This is a link</a></p>
-                             </div>
-               
-                             <div className="card-action">.Here the actions btns..</div>
-           
-                            <div className="card-reveal">
-                   <span className="card-title grey-text text-darken-4">{item.name} - Details<i className="material-icons right">close</i></span>
-                   <p>{item.description} - Here is some more information about this product that is only revealed once clicked on.</p>
-                            </div>
-                            </div>
-            </div>
-          ))}
-        </div>
+        {this.Card_Creator(recent_posts,user)}
         <div className="row">
           <div className="col s12 m12 l12 xl12">
-            <Link to='/display_posts'>
+          {recent_posts.length !== 0?
+          <Link to='/display_posts'>
           <button className="btn myUpdateBtnX myBtn" onClick={()=>{this.props.set_posts({interest: 'recent'}); console.log("call for all posts");
           }}>View all</button>
           </Link>
+          :
+          <Link to='/add_post'>
+          <button className="btn myUpdateBtnX myBtn">Add your first post?</button>
+          </Link>
+          }
           </div>
         </div>
-        <p className="grey-text text-darken-3 lighten-3">Parallax is an effect where the background content or image in this case, is moved at a different speed than the foreground content while scrolling.</p>
-        <div>
-          {/* <Post /> */}
-        </div>
+        <p className="grey-text text-darken-3 lighten-3 hide">Parallax is an effect where the background content or image in this case, is moved at a different speed than the foreground content while scrolling.</p>
       </div>
     </div>
+
     <div className="parallax-container">
       <div className="parallax"><img src={Slide_Pic_4} alt='asfjksl' /></div>
     </div>
+
     <div className="section white">
       <div className="row container">
-        <h2 className="header">Your Posts</h2>
-        <div className='row'>
-          {your_posts.map((item, index)=>(
-            <div className="col s12 m6 l6 xl3" key={item.post_id}>
-                  <div className="card sticky-action" >
-                              <div className="card-image waves-effect waves-block waves-light">
-                             <img className="activator" src={item.dp_image} alt="images/office.jpg" />
-                             </div>
-                             <div className="card-content">
-                             <span className="card-title activator grey-text text-darken-4">{item.name}<i className="material-icons right">more_vert</i></span>
-                   <div><span>Address : {item.location}</span> <span> , {item.country}</span></div>
-           
-                             <p><a href="#">This is a link</a></p>
-                             </div>             
-                             <div className="card-action">.Here the actions btns..</div>
-                            <div className="card-reveal">
-                   <span className="card-title grey-text text-darken-4">{item.name} - Details<i className="material-icons right">close</i></span>
-                   <p>{item.description} - Here is some more information about this product that is only revealed once clicked on.</p>
-                            </div>
-                            </div>
-            </div>
-          ))}
-        </div>
+        <h2 className="header">All Posts</h2>
+        {this.Card_Creator(all_posts, user)}
         <div className="row">
           <div className="col s12 m12 l12 xl12">
+            {your_posts.length !== 0?
           <Link to='/display_posts'>
           <button className="btn myUpdateBtnX myBtn" onClick={()=>{this.props.set_posts({interest: 'your'}); console.log("call for all posts");
           }}>View all</button>
           </Link>
+          :
+          <Link to='/add_post'>
+          <button className="btn myUpdateBtnX myBtn">Add your first post?</button>
+          </Link>
+          }
           </div>
         </div>
-        <p className="grey-text text-darken-3 lighten-3">Parallax is an effect where the background content or image in this case, is moved at a different speed than the foreground content while scrolling.</p>
+        <p className="grey-text text-darken-3 lighten-3 hide">Parallax is an effect where the background content or image in this case, is moved at a different speed than the foreground content while scrolling.</p>
       </div>
-      <div className="parallax-container">
+
+
+          <div className="myAdminMsgSpace container">
+            <p className="myHeaderInHomeX">Ten Seconds!</p>
+            <div className="row">
+              <div className="col s12 m12 l12 xl12">
+                <p className="myAdminMsgSpaceTxt">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloribus repudiandae amet, distinctio mollitia accusantium labore illum alias repellendus ad quidem omnis soluta dignissimos explicabo rerum sit cupiditate corporis ipsum nobis.
+                </p>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col s12 m12 l12 xl12">
+                <p className="myAdminName center">
+                  ___Zeeshan Asif -
+                </p>
+              </div>
+            </div>
+          </div>
+
+      {/* <div className="parallax-container">
       <div className="parallax"><img src={Slide_Pic_3} alt='asfjksl' /></div>
-    </div>
+    </div> */}
+
     <div className="section white">
       <div className="row container">
-        <h2 className="header">All Posts</h2>
-        <div className='row'>
-          {all_posts.map((item, index)=>(
-            <div className="col s12 m6 l6 xl3" key={item.post_id}>
-                  <div className="card sticky-action" >
-                              <div className="card-image waves-effect waves-block waves-light">
-                             <img className="activator" src={item.dp_image} alt="images/office.jpg" />
-                             </div>
-                             <div className="card-content">
-                             <span className="card-title activator grey-text text-darken-4">{item.name}<i className="material-icons right">more_vert</i></span>
-                   <div><span>Address : {item.location}</span> <span> , {item.country}</span></div>
-           
-                             <p><a href="#">This is a link</a></p>
-                             </div>
-               
-                             <div className="card-action">.Here the actions btns..</div>
-           
-                            <div className="card-reveal">
-                   <span className="card-title grey-text text-darken-4">{item.name} - Details<i className="material-icons right">close</i></span>
-                   <p>{item.description} - Here is some more information about this product that is only revealed once clicked on.</p>
-                            </div>
-                            </div>
-            </div>
-          ))}
-        </div>
+        <h2 className="header">Your Posts</h2>
+        {this.Card_Creator(your_posts, user)}
         <div className="row">
           <div className="col s12 m12 l12 xl12">
+          {all_posts.length !== 0?
           <Link to='/display_posts'>
           <button className="btn myUpdateBtnX myBtn" onClick={()=>{this.props.set_posts({interest: 'all'}); console.log("call for all posts");
           }}>View all</button>
           </Link>
+          :
+          <Link to='/add_post'>
+          <button className="btn myUpdateBtnX myBtn">Add your first post?</button>
+          </Link>
+          }
           </div>
         </div>
-        <p className="grey-text text-darken-3 lighten-3">
+        <p className="grey-text text-darken-3 lighten-3 hide">
           Parallax is an effect where the background content or image in this case, is moved at a different speed than the foreground content while scrolling.</p>
       </div>
       </div>
-      <div className="parallax-container">
+
+      {/* <div className="parallax-container">
       <div className="parallax"><img src={Slide_Pic_2} alt='asfjksl' /></div>
-    </div>
+    </div> */}
+
     </div>
 
                     <Footer />
@@ -327,7 +466,8 @@ class Home extends Component {
 //here the redux data will be converted into props
 const mapStateToProps=(state)=>{
     return{
-        posts: state.posts
+        posts: state.posts,
+        user: state.users,
     }
 };
 

@@ -7,7 +7,7 @@ import './editProfileStyle.css';
 import {Link} from 'react-router-dom';
 
 import {connect} from 'react-redux';
-import {addUser, loadData, updateUser} from '../../redux/actions/UserAction/index';
+import {addUser, loadDataUser, updateUser} from '../../redux/actions/UserAction/index';
 import Dp_Replacement from '../../media/dp_replacement.png'
 
 
@@ -42,7 +42,7 @@ class Profile extends Component {
     }
     componentDidMount(){
         // this.loadAcc();
-        this.props.loadData();
+        this.props.loadDataUser();
         console.log(this.props, 'from did mount');
     }
 
@@ -403,4 +403,4 @@ const mapStateToProps=(state)=>{
     }
 };
 
-export default connect(mapStateToProps, {addUser, loadData, updateUser})(Profile);
+export default connect(mapStateToProps, {addUser, loadDataUser, updateUser})(Profile);

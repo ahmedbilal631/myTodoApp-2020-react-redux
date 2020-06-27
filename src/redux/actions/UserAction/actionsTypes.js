@@ -2,7 +2,18 @@
 
 export default {
     addUser: 'ADD_USER',
+    //used to signup
     updateUser: 'UPDATE_USER',
+    //used to update the profile
+
+    loginUser: 'LOGIN_USER',
+    //to login or sign in
+
+    //to manage notifications
+    read_notification: 'READ_NOTIFICATION',
+
+
+
     delTask: 'DELETE_TASK',
     compTask: 'COMPLETE_TASK',
     editTask: 'EDIT_TASK',

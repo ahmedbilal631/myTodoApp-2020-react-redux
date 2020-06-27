@@ -12,6 +12,11 @@ export default {
     your_posts: 'YOUR_POSTS',
     all_posts: 'ALL_POSTS',
 
+    search_by_image: 'SEARCH_BY_IMAGE',
+
+
+
+
     compTask: 'COMPLETE_TASK',
     editTask: 'EDIT_TASK',
     loadData: 'LOAD'

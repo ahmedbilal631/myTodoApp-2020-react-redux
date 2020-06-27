@@ -6,7 +6,11 @@ import './signUpStyle.css';
 import {Link} from 'react-router-dom';
 
 import {connect} from 'react-redux';
-import {addUser, loadData} from '../../redux/actions/UserAction/index';
+import {addUser, loadDataUser} from '../../redux/actions/UserAction/index';
+
+
+//email validator
+import * as EmailValidator from 'email-validator';
 
 
 class SignUp extends Component {
@@ -18,12 +22,17 @@ class SignUp extends Component {
             new_number: '',
             new_country: '',
             new_password: '',
-            new_profile_pic: '',
+            new_profile_pic: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.hiclipart.com%2Ffree-transparent-background-png-clipart-dkctp&psig=AOvVaw3olSzBinTKgBab5vQB5A-e&ust=1592716228546000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIjm3b_Qj-oCFQAAAAAdAAAAABAD',
             accounts: []
     }}
 
     componentDidMount(){
-        this.props.loadData();
+        // window.jQuery(document).ready(function(){
+        //     window.jQuery('.toast').toast();
+        //   }); 
+
+
+        this.props.loadDataUser();
         console.log(this.props);
     }
 
@@ -40,27 +49,97 @@ class SignUp extends Component {
         })
     }
     handleEmailChange=e=>{
-        this.setState({
-            new_email: e.target.value
-        })
+  
+            this.setState({
+                new_email: e.target.value
+            })
     }
     handleNumberChange=e=>{
-        this.setState({
-            new_number: e.target.value
-        })
+        // console.log(typeof(Number(e.target.value)));
+        // console.log((e.target.value).length);
+            this.setState({
+                new_number: e.target.value
+            })
+        
     }
     handlePasswordChange=e=>{
         this.setState({
             new_password: e.target.value
         })
     }
+    
+    //............................................................
+      //Email validation method is here
+  validateEmail = email => {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
 
+//...................................................................
+
+//validation function before form submission
+Checker= ()=>{
+       //validation before submission
+    let valid = false;
+       //email
+    // let grab_email = this.state.new_email;
+    // let grab_email = this.state.new_email;
+    // let validation_result = EmailValidator.validate(grab_email);
+    if(EmailValidator.validate(this.state.new_email)){
+        valid= true;
+    }else{
+        valid= false;
+            alert('wrong email, please re-enter it.')
+            return
+            }
+            if(this.state.new_name != ''){
+                valid= true;
+                }else{
+                    valid= false;
+                    alert('Name not entered, please re-enter it.')
+                    return
+                    }
+                    if(this.state.new_password != ''){
+                        valid= true;
+                        }else{
+                            valid= false;
+                            alert('please enter the password.')
+                        return  
+                        }
+                            if(this.state.new_number != ''){
+                                let collect_val = this.state.new_number;
+                                let type_checker = typeof(Number(collect_val));
+                                
+                                let length_checker = collect_val.length;
+                                if(type_checker == 'number'){
+                                    if(length_checker > 8){
+                                        valid= true;
+                                    }           
+                                }else{
+                                    valid= false;
+                                    alert('please enter a correct contact number, with country code - X.')
+                                    return
+                                    }
+                                }else{
+                                    valid= false;
+                                    alert('please enter a correct contact number, with country code. - Y')
+                                    return
+                                    }
+
+                                    //submission here
+                                    if(valid){
+                                        this.adder();
+                                    }
+
+}
     adder=()=>{
     console.log(this.state);
     let getStateData = this.state;
     // let account_data = 
     // console.log(account_data);
     
+ 
+
     
         this.props.addUser(
             {
@@ -105,14 +184,26 @@ class SignUp extends Component {
                     </form> */}
                     <div className="myForm row">
                 {/* <form className="XX"> */}
-                    <div className="input-field">
+                  <div id="myTxtBoxCover" className="input-field">
+                    <i className="material-icons prefix">account_circle</i>
+                     <input id="icon_prefix"
+                      style={{border: 'none'}}
+                     value={this.state.new_name}
+                     onChange={this.handleNameChange}
+                      type="text" className="input-field validate " />
+                    <label htmlfor="icon_prefix">First Name</label>
+                    </div>
+
+
+
+                    {/* <div className="input-field">
                     <i className="myIcon material-icons prefix ">account_circle</i>
-                    <input id="icon_prefix" type="text" className="myTxtBox"
+                    <input id=" icon-prefix" type="text" className="myTxtBoxX"
                                                        value={this.state.new_name}
-                                                       onChange={this.handleNameChange}                    
+                                                       onChange={this.handleNameChange}                 
                     />
                      <label htmlFor="icon_prefix" className="myTxtLable">Full Name</label>
-                     </div>
+                     </div> */}
                      <div className="input-field">
                     <i className="material-icons prefix">email</i>
                     <input id="email" type="email" className="myInputBox" 
@@ -138,7 +229,7 @@ class SignUp extends Component {
                      <label htmlFor="password">Password</label>
                      </div>
                     <div>
-                        <button className="myBtn btn " onClick={this.adder}>SIGN UP</button>
+                        <button className="myBtn btn " onClick={this.Checker}>SIGN UP</button>
                     </div>
                     {/* </form> */}
                     <div className="row">
@@ -168,4 +259,4 @@ const mapStateToProps=(state)=>{
     }
 };
 
-export default connect(mapStateToProps, {addUser, loadData})(SignUp);
+export default connect(mapStateToProps, {addUser, loadDataUser})(SignUp);

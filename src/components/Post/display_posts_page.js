@@ -4,18 +4,19 @@ import React, { Component } from 'react';
 import NavBar from '../Header/NavBar2/navBar2';
 import SubFooter from '../Footer/Sub_Footer';
 import Footer from '../Footer/Main_Footer/footer';
+import Side_Links from '../Side_Panel/side_links';
 import './addPostStyle.css';
 
 import {Link} from 'react-router-dom';
 
 import {connect} from 'react-redux';
-// import {addUser, loadData, updateUser} from '../../redux/actions/UserAction/index';
+import {set_posts} from '../../redux/actions/UserAction/index';
 import Dp_Replacement from '../../media/dp_replacement.png'
 
 
 class Display_Posts extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state ={
             edit: false,
             isEmpty: false,
@@ -32,6 +33,7 @@ class Display_Posts extends Component {
                 dp_image: '',
 
                 posts: [],
+                posts_interest: 'all'
 
             // recievedUsers: this.props.recievedUsers,
     }
@@ -40,48 +42,77 @@ class Display_Posts extends Component {
 
 
     componentDidMount(){
+        this.setState({
+            posts_interest: this.props.posts.post_interest
+        })
         //here will be post loaders
         }
 
     componentWillReceiveProps(nextProps){
         console.log(nextProps.posts,"next props")
         this.setState({
-            posts : nextProps.posts
+            posts : nextProps.posts,
+            posts_interest : nextProps.posts.post_interest
         })    
     }
     //...................................
 
     render() {
+        //getting user data
+        let user = this.props.user;
         //...................................................
         //posts interest selection
         let posts_interest = localStorage.getItem('display_posts_setting');
         //getting all the post from store
-        let get_posts  = this.props.posts;
+        let get_posts  = this.props.posts.posts;
         console.log(posts_interest,get_posts);
 
         //.....................................................
         //to get Your Posts functions
         //getting your email from local storage to display your posts
-        // let post_creator_email = localStorage.getItem('post_creator_email') 
+        let post_creator_email = localStorage.getItem('post_creator_email'); 
 
-        let your_posts = get_posts.filter((item)=> item.post_creator_email == "abc@abc.abc");
+        let your_posts = get_posts.filter((item)=> item.post_creator_email === post_creator_email);
         console.log(your_posts, 'your post');
         //...................................................
         //to get Your active Posts functions
         //getting your email from local storage to display your posts
         // let post_creator_email = localStorage.getItem('post_creator_email') 
 
-        let your_active_posts = get_posts.filter((item)=> item.post_creator_email == "abc@abc.abc" && item.post_status == 'active');
-        console.log(your_active_posts, 'your post');
+        let your_active_posts = get_posts.filter((item)=> item.post_creator_email === post_creator_email && item.post_status === 'active');
+        console.log(your_active_posts, 'your active post');
+        //...................................................
+            //to get Your active Posts functions
+        //getting your email from local storage to display your posts
+        // let post_creator_email = localStorage.getItem('post_creator_email') 
+
+        let your_in_active_posts = get_posts.filter((item)=> item.post_creator_email === post_creator_email && item.post_status === 'in_active');
+        console.log(your_in_active_posts, 'your in active post');
         //...................................................
         //to get Your Resolved Posts functions
         //getting your email from local storage to display your posts
         // let post_creator_email = localStorage.getItem('post_creator_email') 
 
-        let your_resolved_posts = get_posts.filter((item)=> item.post_creator_email == "abc@abc.abc");
-         your_resolved_posts = get_posts.filter((item)=> item.post_status == "resolved");
+        let your_resolved_posts = get_posts.filter((item)=> item.post_creator_email === post_creator_email && item.post_status === "resolved");
+        //  your_resolved_posts = get_posts.filter((item)=> );
         console.log(your_resolved_posts, 'your resolved post');
         //...................................................
+        //functions for your followed posts
+        let followed_posts_id = this.props.user.followed_posts;
+        console.log("followed posts", followed_posts_id);
+        let followed_posts = [];
+        if(followed_posts_id.length !== -1){
+
+            for (let i =0; i < followed_posts_id.length; i++){
+                let temp_post = get_posts.filter((item)=> item.post_id === followed_posts_id[i]);
+                followed_posts.push(temp_post[0]);
+            }
+        }
+            console.log('followed post', followed_posts);
+
+            //..............................................
+            
+        
         //functions for recent posts order
         //recent post array
       let recent_posts = [];
@@ -101,7 +132,7 @@ class Display_Posts extends Component {
 
         if(get_posts[i].post_id > higher_id){
           higher_id = get_posts[i].post_id;
-          console.log(higher_id, ' loop higher id');  
+        //   console.log(higher_id, ' loop higher id');  
         }
       }
         for(let k = 0; k<=posts_array_length; k++){
@@ -116,132 +147,370 @@ class Display_Posts extends Component {
             higher_id = higher_id - 1;
           }
         }
-      console.log(recent_posts, 'for recent posts loop'); 
+    //   console.log(recent_posts, 'for recent posts loop'); 
       //...............................................................
-      //................................................
+      //list of posts to be displayed
+      let display_list = [];
+      let display_page_title = 'Not Specified';
+      if(posts_interest === 'recent'){
+          display_page_title = 'RECENT POSTS';
+          display_list = recent_posts;
+        }else if(posts_interest === 'your'){
+            display_page_title = 'YOUR POSTS';
+            display_list = your_posts;
+        }else if(posts_interest === 'all'){
+            display_page_title = 'ALL POSTS';
+            display_list = get_posts;
+        }else if(posts_interest === 'active'){
+            display_page_title = 'YOUR ACTIVE POSTS';
+            display_list = your_active_posts;
+        }else if(posts_interest === 'in_active'){
+            display_page_title = 'YOUR IN-ACTIVE POSTS';
+            display_list = your_in_active_posts;
+        }else if(posts_interest === 'followed'){
+            display_page_title = 'YOUR FOLLOWED POSTS';
+            display_list = followed_posts;
+        }else if(posts_interest === 'resolved'){
+            display_page_title = 'YOUR RESOLVED POSTS';
+            display_list = your_resolved_posts;
+        }
+        console.log("display_list", display_list);          
+        console.log("display_list", (display_list).length);          
+        //................................................
 
         return (
               <div className='mX'>
                 <NavBar />
                 <div className="myAdBox">
-                    
-                        {posts_interest == 'recent'? <p className="myPageTitle">RECENT</p>: posts_interest == 'your'?<p className="myPageTitle">YOUR POSTS</p>:<p className="myPageTitle">ALL POSTS</p>}
-                    
+        <p className="myPageTitle">{display_page_title}</p>
                 </div>
                 <div className="container">
                     <div className="row">
                         <div className="col s12 m8 l8 xl10">
                             <div className="row">
-                            {posts_interest == 'recent'? recent_posts.length != -1?                           
-                            recent_posts.map((item, index)=>(
-                            <div className="col s12 m6 l6 xl3" key={item.post_id}>
-                             <div className="card sticky-action">
-
-                             <div className="card-content">
-                             <span className="card-title activator grey-text text-darken-4">{item.name}<i className="material-icons right">more_vert</i></span>         
-                             </div>
-                              <div className="card-image waves-effect waves-block waves-light">
-                             <img className="activator" src={item.dp_image} alt="images/office.jpg" />
-                             </div>
-                             <div className="card-content">
-                             <span className="card-title activator grey-text text-darken-4">{item.name}<i className="material-icons right">more_vert</i></span>
-                            <div><span>Address : {item.location}</span> <span> , {item.country}</span></div>
-           
-                             <p><a href="#">This is a link</a></p>
-                             </div>
-               
-                             <div className="myCardBtnSec card-content">
-                             
-                                 
-                                 <i className="material-icons left">lock</i>
-                                 <i className="material-icons right">share</i>
-                                                                
+                            {display_list.length !== 0?                           
+                            display_list.map((item, index)=>(
+                                <div className="col s12 m12 l6 xl4" key={item.post_id}>
+                                <div className="card sticky-action">
+                                <div className="card-content row">
+                                        <div className="col s6 m6 l6 xl6">
+                                        <i className="material-icons left" title="follow">star_border</i>
+                                        </div>
+                                        <div className="col s6 m6 l6 xl6">
+                                        <i className="material-icons right" title="share">share</i>
+                                        </div>
+                                    </div>
+                                 <div className="card-image waves-effect waves-block waves-light">
+                                <img className="activator" src={item.dp_image} alt="images/office.jpg" />
                                 </div>
-           
-                            <div className="card-reveal">
-                   <span className="card-title grey-text text-darken-4">{item.name} - Details<i className="material-icons right">close</i></span>
-                   <p>{item.description} - Here is some more information about this product that is only revealed once clicked on.</p>
-                            </div>
-                            </div>
-            </div>
+                                <div className="card-content">
+                                    <div className="row">
+                                        <div className="col s8 m8 l8 xl8">
+                                        <span className="card-title activator grey-text text-darken-4">{item.name}</span>
+                                        </div>
+                                        <div className="col s4 m4 l4 xl4">
+                                        <i className="material-icons activator right" title="details">turned_in</i>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col s6 m6 l6 xl6">
+                                        <span className="grey-text text-darken-4">Status</span>
+                                        </div>
+                                        <div className="col s6 m6 l6 xl6">
+                                      <span className="myItemsVals teal-text text-darken-3">{(item.status).toUpperCase()}</span>
+                                        </div>
+                                    </div>
+                   
+                                    <div className="row">
+                                        <div className="col s6 m6 l6 xl6">Country -</div>
+                                      <div className="myItemsVals col s6 m6 l6 xl6">{item.country}</div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col s6 m6 l6 xl6">Region -</div>
+                                       <div className="myItemsVals col s6 m6 l6 xl6">{item.region}</div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col s6 m6 l6 xl6">Post date -</div>
+                                        <div className="myItemsVals col s6 m6 l6 xl6">{item.post_time.date}-{item.post_time.month}-{item.post_time.year}</div>
+                                    </div>
+                                    {
+                                        item.post_creator_email === post_creator_email?
+                                        <div className="row">
+                                        <div className="col s6 m6 l6 xl6">Post status</div>
+                                        <div className="myItemsVals col s6 m6 l6 xl6">{item.post_status}</div>
+                                    </div>
+                                    :                                    
+                                    <div className="row">
+                                    <div className="col s6 m6 l6 xl6">Posted By</div>
+                                    <div className="myItemsVals col s6 m6 l6 xl6">{(item.post_creator_name).slice(0,7)}</div>
+                                    </div>
+                                    }
+                                
+                                </div>
+                                <div className="card-action">
+                                    {item.post_creator_email === post_creator_email?
+                                    <Link onClick={()=>{
+                                        localStorage.setItem('edit_post_code', item.post_id);
+                                    }} to="/edit_post" className='center'><i className="material-icons">edit</i> Edit Post</Link>
+                                    :
+                                    <Link to="#report" className='center'><i className="material-icons">flag</i> Report</Link>
+                                }
+                                    {/* <Link to="/edit_post" className='right'>In-Active</Link> */}
+                                </div>
+                               <div className="card-reveal">
+                                   <div className="row">
+                                       <div className="col s12 m12 l12 xl12">
+                                       <span className="card-title grey-text text-darken-4"><i className="material-icons right">close</i></span>
+                                       </div>
+                                   </div>
+                                   <div className="row">
+                                       <div className="col s6 m6 l6 xl6">
+                           <span className="card-title grey-text text-darken-4">{item.name}</span>
+                                       </div>
+                                       <div className="col s6 m6 l6 xl6">
+                           <span className="card-title teal-text text-darken-4">{(item.status).toUpperCase()}</span>
+                                           </div>
+                                   </div>
+                                   <div className="row">
+                                       <div className="myItemsVals col s12 m12 l12 xl12">Details</div>
+                                       <div className="col s12 m12 l12 xl12">
+                                       {item.description}.-
+                                       </div>
+                                   </div>
+                                   <div className="row">
+                                       <div className="myItemsVals col s12 m12 l12 xl12">Address</div>
+                                       <div className="col s12 m12 l12 xl12">
+                                       {item.location},{item.region},{item.country}
+                                       </div>
+                                   </div>
+                                   <div className="row">
+                                       <div className="myItemsVals col s12 m12 l12 xl12">Contact</div>
+                                       <div className="col s12 m12 l12 xl12">
+                                       contact info will be here.
+                                       </div>
+                                   </div>
+                                   <div className="row">
+                                       <div className="myItemsVals col s6 m6 l6 xl6">Follow</div>
+                                       <div className="myItemsVals col s6 m6 l6 xl6">
+                                           Report
+                                       </div>
+                                   </div>
+                               </div>
+                               </div>
+                               </div>
           ))
           :
-          <div className="col s12 m12 l12 xl12">
+          <div className="col s12 m12 l12 xl12 center">
               Sorry, There is no post to display.
           </div>
-        :posts_interest == 'your'?your_posts.length != -1?
-        your_posts.map((item, index)=>(
-            <div className="col s12 m6 l6 xl3" key={item.post_id}>
-             <div className="card sticky-action">
-              <div className="card-image waves-effect waves-block waves-light">
-             <img className="activator" src={item.dp_image} alt="images/office.jpg" />
-             </div>
-             <div className="card-content">
-             <span className="card-title activator grey-text text-darken-4">{item.name}<i className="material-icons right">more_vert</i></span>
-            <div><span>Address : {item.location}</span> <span> , {item.country}</span></div>
+    //     :posts_interest == 'your'?your_posts.length != -1?
+    //     your_posts.map((item, index)=>(
+    //         <div className="col s12 m12 l6 xl4" key={item.post_id}>
+    //         <div className="card sticky-action">
+    //         <div className="card-content row">
+    //                 <div className="col s6 m6 l6 xl6">
+    //                 <i className="material-icons left" title="follow">star_border</i>
+    //                 </div>
+    //                 <div className="col s6 m6 l6 xl6">
+    //                 <i className="material-icons right" title="share">share</i>
+    //                 </div>
+    //             </div>
+    //          <div className="card-image waves-effect waves-block waves-light">
+    //         <img className="activator" src={item.dp_image} alt="images/office.jpg" />
+    //         </div>
+    //         <div className="card-content">
+    //             <div className="row">
+    //                 <div className="col s8 m8 l8 xl8">
+    //                 <span className="card-title activator grey-text text-darken-4">{item.name}</span>
+    //                 </div>
+    //                 <div className="col s4 m4 l4 xl4">
+    //                 <i className="material-icons activator right" title="details">turned_in</i>
+    //                 </div>
+    //             </div>
+    //             <div className="row">
+    //                 <div className="col s6 m6 l6 xl6">
+    //                 <span className="grey-text text-darken-4">Status</span>
+    //                 </div>
+    //                 <div className="col s6 m6 l6 xl6">
+    //               <span className="myItemsVals teal-text text-darken-3">{(item.status).toUpperCase()}</span>
+    //                 </div>
+    //             </div>
 
-             <p><a href="#">This is a link</a></p>
-             </div>
-
-             <div className="card-action">.Here the actions btns..</div>
-
-            <div className="card-reveal">
-             <span className="card-title grey-text text-darken-4">{item.name} - Details<i className="material-icons right">close</i></span>
-            <p>{item.description} - Here is some more information about this product that is only revealed once clicked on.</p>
-            </div>
-            </div>
-            </div>
-            ))
-            :
-            <div className="col s12 m12 l12 xl12">
-                Sorry, You have no post yet.
-            </div>
-            :get_posts.length != -1?
-            get_posts.map((item, index)=>(
-                <div className="col s12 m6 l6 xl3" key={item.post_id}>
-                 <div className="card sticky-action">
-                  <div className="card-image waves-effect waves-block waves-light">
-                 <img className="activator" src={item.dp_image} alt="images/office.jpg" />
-                 </div>
-                 <div className="card-content">
-                 <span className="card-title activator grey-text text-darken-4">{item.name}<i className="material-icons right">more_vert</i></span>
-                <div><span>Address : {item.location}</span> <span> , {item.country}</span></div>
-
-                 <p><a href="#">This is a link</a></p>
-                 </div>
+    //             <div className="row">
+    //                 <div className="col s6 m6 l6 xl6">Country -</div>
+    //               <div className="myItemsVals col s6 m6 l6 xl6">{item.country}</div>
+    //             </div>
+    //             <div className="row">
+    //                 <div className="col s6 m6 l6 xl6">Region -</div>
+    //                <div className="myItemsVals col s6 m6 l6 xl6">{item.region}</div>
+    //             </div>
+    //             <div className="row">
+    //                 <div className="col s6 m6 l6 xl6">Post date -</div>
+    //                 <div className="myItemsVals col s6 m6 l6 xl6">{item.post_time.date}-{item.post_time.month}-{item.post_time.year}</div>
+    //             </div>
+            
+    //         </div>
+    //         <div className="card-action">
+    //             {item.post_creator_email === post_creator_email?
+    //             <Link to="/edit_post" className='center'><i className="material-icons">edit</i> Edit Post</Link>
+    //             :
+    //             <Link to="#report" className='center'><i className="material-icons">flag</i> Report</Link>
+    //         }
+    //             {/* <Link to="/edit_post" className='right'>In-Active</Link> */}
+    //         </div>
+    //        <div className="card-reveal">
+    //            <div className="row">
+    //                <div className="col s12 m12 l12 xl12">
+    //                <span className="card-title grey-text text-darken-4"><i className="material-icons right">close</i></span>
+    //                </div>
+    //            </div>
+    //            <div className="row">
+    //                <div className="col s6 m6 l6 xl6">
+    //    <span className="card-title grey-text text-darken-4">{item.name}</span>
+    //                </div>
+    //                <div className="col s6 m6 l6 xl6">
+    //    <span className="card-title teal-text text-darken-4">{(item.status).toUpperCase()}</span>
+    //                    </div>
+    //            </div>
+    //            <div className="row">
+    //                <div className="myItemsVals col s12 m12 l12 xl12">Details</div>
+    //                <div className="col s12 m12 l12 xl12">
+    //                {item.description}.-
+    //                </div>
+    //            </div>
+    //            <div className="row">
+    //                <div className="myItemsVals col s12 m12 l12 xl12">Address</div>
+    //                <div className="col s12 m12 l12 xl12">
+    //                {item.location},{item.region},{item.country}
+    //                </div>
+    //            </div>
+    //            <div className="row">
+    //                <div className="myItemsVals col s12 m12 l12 xl12">Contact</div>
+    //                <div className="col s12 m12 l12 xl12">
+    //                contact info will be here.
+    //                </div>
+    //            </div>
+    //            <div className="row">
+    //                <div className="myItemsVals col s6 m6 l6 xl6">Follow</div>
+    //                <div className="myItemsVals col s6 m6 l6 xl6">
+    //                    Report
+    //                </div>
+    //            </div>
+    //        </div>
+    //        </div>
+    //        </div>
+    //         ))
+    //         :
+    //         <div className="col s12 m12 l12 xl12">
+    //             Sorry, You have no post yet.
+    //         </div>
+    //         :get_posts.length != -1?
+    //         get_posts.map((item, index)=>(
+    //             <div className="col s12 m12 l6 xl4" key={item.post_id}>
+    //             <div className="card sticky-action">
+    //             <div className="card-content row">
+    //                     <div className="col s6 m6 l6 xl6">
+    //                     <i className="material-icons left" title="follow">star_border</i>
+    //                     </div>
+    //                     <div className="col s6 m6 l6 xl6">
+    //                     <i className="material-icons right" title="share">share</i>
+    //                     </div>
+    //                 </div>
+    //              <div className="card-image waves-effect waves-block waves-light">
+    //             <img className="activator" src={item.dp_image} alt="images/office.jpg" />
+    //             </div>
+    //             <div className="card-content">
+    //                 <div className="row">
+    //                     <div className="col s8 m8 l8 xl8">
+    //                     <span className="card-title activator grey-text text-darken-4">{item.name}</span>
+    //                     </div>
+    //                     <div className="col s4 m4 l4 xl4">
+    //                     <i className="material-icons activator right" title="details">turned_in</i>
+    //                     </div>
+    //                 </div>
+    //                 <div className="row">
+    //                     <div className="col s6 m6 l6 xl6">
+    //                     <span className="grey-text text-darken-4">Status</span>
+    //                     </div>
+    //                     <div className="col s6 m6 l6 xl6">
+    //                   <span className="myItemsVals teal-text text-darken-3">{(item.status).toUpperCase()}</span>
+    //                     </div>
+    //                 </div>
    
-                 <div className="card-action">.Here the actions btns..</div>
-
-                <div className="card-reveal">
-             <span className="card-title grey-text text-darken-4">{item.name} - Details<i className="material-icons right">close</i></span>
-             <p>{item.description} - Here is some more information about this product that is only revealed once clicked on.</p>
-                </div>
-                </div>
-            </div>  
-            ))
-            :
-            <div className="col s12 m12 l12 xl12">
-                Sorry, There is no post to display.
-            </div>
+    //                 <div className="row">
+    //                     <div className="col s6 m6 l6 xl6">Country -</div>
+    //                   <div className="myItemsVals col s6 m6 l6 xl6">{item.country}</div>
+    //                 </div>
+    //                 <div className="row">
+    //                     <div className="col s6 m6 l6 xl6">Region -</div>
+    //                    <div className="myItemsVals col s6 m6 l6 xl6">{item.region}</div>
+    //                 </div>
+    //                 <div className="row">
+    //                     <div className="col s6 m6 l6 xl6">Post date -</div>
+    //                     <div className="myItemsVals col s6 m6 l6 xl6">{item.post_time.date}-{item.post_time.month}-{item.post_time.year}</div>
+    //                 </div>
+                
+    //             </div>
+    //             <div className="card-action">
+    //                 {item.post_creator_email === post_creator_email?
+    //                 <Link to="/edit_post" className='center'><i className="material-icons">edit</i> Edit Post</Link>
+    //                 :
+    //                 <Link to="#report" className='center'><i className="material-icons">flag</i> Report</Link>
+    //             }
+    //                 {/* <Link to="/edit_post" className='right'>In-Active</Link> */}
+    //             </div>
+    //            <div className="card-reveal">
+    //                <div className="row">
+    //                    <div className="col s12 m12 l12 xl12">
+    //                    <span className="card-title grey-text text-darken-4"><i className="material-icons right">close</i></span>
+    //                    </div>
+    //                </div>
+    //                <div className="row">
+    //                    <div className="col s6 m6 l6 xl6">
+    //        <span className="card-title grey-text text-darken-4">{item.name}</span>
+    //                    </div>
+    //                    <div className="col s6 m6 l6 xl6">
+    //        <span className="card-title teal-text text-darken-4">{(item.status).toUpperCase()}</span>
+    //                        </div>
+    //                </div>
+    //                <div className="row">
+    //                    <div className="myItemsVals col s12 m12 l12 xl12">Details</div>
+    //                    <div className="col s12 m12 l12 xl12">
+    //                    {item.description}.-
+    //                    </div>
+    //                </div>
+    //                <div className="row">
+    //                    <div className="myItemsVals col s12 m12 l12 xl12">Address</div>
+    //                    <div className="col s12 m12 l12 xl12">
+    //                    {item.location},{item.region},{item.country}
+    //                    </div>
+    //                </div>
+    //                <div className="row">
+    //                    <div className="myItemsVals col s12 m12 l12 xl12">Contact</div>
+    //                    <div className="col s12 m12 l12 xl12">
+    //                    contact info will be here.
+    //                    </div>
+    //                </div>
+    //                <div className="row">
+    //                    <div className="myItemsVals col s6 m6 l6 xl6">Follow</div>
+    //                    <div className="myItemsVals col s6 m6 l6 xl6">
+    //                        Report
+    //                    </div>
+    //                </div>
+    //            </div>
+    //            </div>
+    //            </div>  
+    //         ))
+    //         :
+    //         <div className="col s12 m12 l12 xl12">
+    //             Sorry, There is no post to display.
+    //         </div>
         }
 
-                                posts will be here
                             </div>
                         </div>
                         <div className="col s12 m4 l4 xl2">
-                            <div className="mySideLinksTitle">
-                                Futher
-                            </div>
-                            <div className="mySideLinksList">
-                                <ul>
-                                    <li><Link to='#your_posts'>Your posts</Link></li>
-                                    <li><Link to='#follow_up'>Follow up</Link></li>
-                                    <li><Link to='#notifications'>Notifications</Link></li>
-                                    <li><Link to='#settings'>Settings</Link></li>
-                                    <li><Link to='#help'>Help?</Link></li>
-                                    <li><Link to='#logout'>Logout</Link></li>
-                                </ul>
-                            </div>
+                            <Side_Links />
                         </div>
                     </div>
                 </div>
@@ -256,7 +525,8 @@ class Display_Posts extends Component {
 //here the redux data will be converted into props
 const mapStateToProps=(state)=>{
     return{
-        posts: state.posts
+        posts: state.posts,
+        user: state.users
     }
 };
 

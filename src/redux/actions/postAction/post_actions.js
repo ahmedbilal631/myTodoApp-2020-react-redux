@@ -88,3 +88,15 @@ export const loadData = ()=>{
         type: types.loadData
     }
 };
+//........................................................
+
+// to get image recognition test result by stored data from database to local redux store state...
+export const search_by_image = (data)=>{
+    console.log("yes call for search by image");
+    return {
+        type: types.search_by_image,
+        payload: data
+    }
+};
+//........................................................
+

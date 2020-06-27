@@ -37,7 +37,7 @@ class Add_post extends Component {
 
             // recievedUsers: this.props.recievedUsers,
     }
-    console.log(this.state, 'from construct');    
+    // console.log(this.state, 'from construct');    
 }
 
 //...................................................
@@ -55,7 +55,7 @@ class Add_post extends Component {
         handleStatusChange=event=>{
             let textX = this.state.status;
             textX = event.target.value
-            console.log(textX, 'yes status change');
+            // console.log(textX, 'yes status change');
             this.setState({
                 status: textX
             });
@@ -167,8 +167,11 @@ class Add_post extends Component {
         }   
         //...........................................
     //state checker before update
-    Checker=(acc)=>{
+    Checker=(acc, old_posts, old_notifications)=>{
         let captureState = this.state;
+
+        if(captureState.dp_image === ''){
+            captureState.dp_image = acc.dp_image;}
         if(captureState.name === ''){
             alert('name is empty');
             }
@@ -190,34 +193,53 @@ class Add_post extends Component {
                                     else if(captureState.country === ''){
                                         alert('Please make sure country name.')}
                                         else{
-                                            this.AddNow();
+                                            this.AddNow(old_posts, old_notifications);
                                           }
-                                        if(captureState.dp_image === ''){
-                                            captureState.dp_image = acc.dp_image;}
+                                        
                                             
     }
     //..............................................
-    //update function
-    AddNow=()=>{
+    //add function
+    AddNow=(old_posts, old_notifications)=>{
         // console.log('id recieved', acc.user_id);
      
+        //to get highest post id from old posts state
+        
+        let posts_array_length = old_posts.length-1;
+        let notifications_array_length = old_notifications.length-1;
+        //to get higher rank id
+        let higher_id_posts = 1000;
+        for(let i = 0; i<=posts_array_length; i = i+1){  
+            if(old_posts[i].post_id > higher_id_posts){
+                higher_id_posts = old_posts[i].post_id;
+            }
+        }
+        let higher_id_notification = 1000;
+    for(let i = 0; i<=notifications_array_length; i = i+1){  
+        if(old_notifications[i].notification_id > higher_id_notification){
+          higher_id_notification = old_notifications[i].notification_id;
+      }
+  }
+    //   console.log(higher_id_posts, ' add post higher id old array');  
+    //   console.log(higher_id_notification, ' add notification higher id old array');  
      
         //time identity in a post
-      let yr = new Date().getFullYear().toString();
-      let dt = new Date().getMonth().toString();
-      let mn = new Date().getDate().toString();
+      let yr = new Date().getFullYear();
+      let mn = new Date().getMonth();
+      let dt = new Date().getDate();
       let hr = new Date().getHours().toString();
       let min = new Date().getMinutes().toString();
-      let get_time = yr+dt+mn+hr+min;
-      console.log(get_time, 'form add_post');
+      let get_time =Number( yr.toString()+(mn + 1).toString()+dt.toString());
+      console.log(get_time, 'form time number add_post');
       this.setState({
           post_time: get_time
       })
       //.........................................
-        console.log(this.state, 'state from update');
+        // console.log(this.state, 'state from add post');
         
             this.props.add_post({
-                user_id: (Math.round(Math.random()*1000)),
+                post: {
+                post_id: higher_id_posts + 1,
                 name : this.state.name,
                 status: this.state.status,
                 gender: this.state.gender,
@@ -227,12 +249,25 @@ class Add_post extends Component {
                 country: this.state.country,
                 region: this.state.region,
                 description: this.state.description,
-                resloved: this.state.resloved,
-                // password:this.state.password,
                 dp_image: this.state.dp_image,
                 post_time: this.state.post_time,
-                post_creator_email: 'abc@abc.abc',
-            })
+                post_creator_email: this.props.user.email,
+                post_creator_name: this.props.user.name,
+                post_status: 'active', //active , in_active, resolved
+                post_time: {
+                    // month-year
+                    date: dt, //0-30
+                    month: mn + 1, //0-11
+                    year: yr, //0-now
+                },
+                follwed_by: []
+            },
+        notification: {
+            notification_id: higher_id_notification +1,
+            post_id: higher_id_posts + 1,
+            post_creator_id: this.props.user.user_id,
+            notification_date: get_time,
+        }})
             this.setState({
                 edit: false,
                 isEmpty: false,
@@ -255,28 +290,15 @@ class Add_post extends Component {
     }
         //...............................................
         //Re-enter function
-        //..............................................
-        //Delete account function
-        Delete_Account=(acc)=>{
-            console.log('delete account', acc.user_id);
-        }
-        //...............................................
-
-    adder=()=>{
-    console.log(this.state, 'from adder');
-    
-        // this.props.addUser({text: this.state.name});
-        // this.setState({
-        //     name: ''
-        // });
-    }
-
-    //..................................................
 
     render() {
-        let acc = this.props.recievedUsers[0];
-        let store = this.props.recievedUsers;
-        console.log(store, 'current store');
+        let acc = this.props.posts.posts[0];
+        let posts_state = this.props.posts.posts;
+        let notifications_state = this.props.posts.notifications;
+        // console.log(posts_state, 'current store');
+        let local_posts = JSON.parse(localStorage.getItem('posts_state'));
+        // console.log('from local storage', local_posts);
+        
         const { country, region,
             name,
             status,
@@ -287,6 +309,13 @@ class Add_post extends Component {
             location,
             description,
         dp_image } = this.state;
+
+//to get
+
+
+
+
+
         return (
               <div className='mX'>
                 <NavBar />
@@ -294,14 +323,6 @@ class Add_post extends Component {
                     <p className="myPageTitle">
                         NEW POST
                     </p>
-                    {/* <div  className="dp_Box_Style">
-                            {acc.profile_image == ''? 
-                        // <p className="place_for_dp_Text">DP</p>    
-                        <img src={Dp_Replacement} alt="Add_post Image" className='dp_style responsive-img'/>
-                        :
-                        <img src={acc.dp_image} width="150px" alt="Add_post Image" className='dp_styleX circle responsive-img'/>
-                    }
-                            </div> */}
 
                 </div>
                 <div className="container">
@@ -345,9 +366,9 @@ class Add_post extends Component {
                                     <td colSpan="2">
                                     <select style={{border: 'none',}} onChange={this.handleGenderChange}>
                                       <option value={gender} disabled selected>Choose your option</option>
-                                      <option value="missing">Male</option>
-                                      <option value="found">Female</option>
-                                      <option value="found">Other</option>
+                                      <option value="male">Male</option>
+                                      <option value="female">Female</option>
+                                      <option value="other">Other</option>
                                     </select>
                                     </td>
                                 </tr>                                    
@@ -426,7 +447,7 @@ class Add_post extends Component {
                                     </td>
                                 </tr>
                                     {
-                                    dp_image != ''?
+                                    dp_image !== ''?
                                 <tr>
                                         <td colSpan='3'>
                                         {/* <img src={require('../../media/dp_replacement.png')}  alt="Add_post Image" className='dp_styleXX circle responsive-img'/> */}
@@ -467,7 +488,7 @@ class Add_post extends Component {
                                 </tr> */}
                                 <tr>
                                     <td colSpan="2" className="center">
-                                    <button className="btn myUpdateBtnX myBtn" onClick={()=>{this.Checker(acc)}}>Submit & Post</button>    
+                                    <button className="btn myUpdateBtnX myBtn" onClick={()=>{this.Checker(acc, posts_state, notifications_state)}}>Submit & Post</button>    
                                     </td>
                                 </tr>
                             </table>
@@ -501,7 +522,8 @@ class Add_post extends Component {
 //here the redux data will be converted into props
 const mapStateToProps=(state)=>{
     return{
-        recievedUsers: state.posts
+        user: state.users,
+        posts: state.posts
     }
 };
 

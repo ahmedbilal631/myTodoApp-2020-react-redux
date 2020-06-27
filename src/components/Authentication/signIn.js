@@ -6,18 +6,22 @@ import './signUpStyle.css';
 import {Link} from 'react-router-dom';
 
 import {connect} from 'react-redux';
-import {addUser, loadData} from '../../redux/actions/UserAction/index';
+import {loginUser, loadDataUser} from '../../redux/actions/UserAction/index';
+
+//email validator
+import * as EmailValidator from 'email-validator';
 
 
 class SignIn extends Component {
     constructor(){
         super();
         this.state ={
-            name : []
+            new_email: '',
+            new_password: ''
     }}
 
     componentDidMount(){
-        this.props.loadData();
+        this.props.loadDataUser();
         console.log(this.props);
     }
 
@@ -27,22 +31,59 @@ class SignIn extends Component {
             name : nextProps.name
         })    
     }
-
-    handleChange=event=>{
-        let textX = this.state;
-        textX.name = event.target.value
-        console.log(textX);
-        this.setState({
-            name: textX.name
+    //.........................................................
+    //email change handler
+    handleEmailChange=e=>{
+         this.setState({
+            new_email: e.target.value
         })
     }
-
-    adder=()=>{
-    console.log(this.state);
-    
-        this.props.addUser({text: this.state.name});
+    //..........................................................
+    //pwd change handler
+    handlePasswordChange=e=>{
         this.setState({
-            name: ''
+            new_password: e.target.value
+        })
+    }  
+    //..........................................................
+    //validation function before form submission
+Checker= ()=>{
+    //validation before submission
+        let valid = false;
+        //email
+         if(EmailValidator.validate(this.state.new_email)){
+            valid= true;
+            }else{
+            valid= false;
+                alert('wrong email, please re-enter it.')
+            return
+            }
+            //pwd validator
+                 if(this.state.new_password != ''){
+                     valid= true;
+                     }else{
+                         valid= false;
+                         alert('please enter the password.')
+                     return  
+                     }
+
+                                 //submission here
+                                 if(valid){
+                                     this.Login();
+                                 }
+
+}
+
+    Login=()=>{
+    console.log(this.state);
+    //sending data
+        this.props.loginUser({
+            email: this.state.new_email,
+            password: this.state.new_password
+        });
+        this.setState({
+            new_email: '',
+            new_password: ''
         });
     }
 
@@ -59,28 +100,16 @@ class SignIn extends Component {
                          <p className="myFormTitle">
                               Sign in
                              </p>
-        <p>{this.state.name}</p>
+        {/* <p>{this.state.name}</p> */}
                         </div>
                         </div>
-                    {/* <form action="">
-                        <div style={{display: 'flex', flexDirection: 'row'}}>
-                        <span className='material-icons' id='icon' style={{float:'left', marginTop: '0.65em'}}>account_circle</span>
-                        <input type="text" className='myTxtBox myTxtname'  placeholder="Full Name"/>
-                        </div>
-                    </form> */}
                     <div className="myForm row">
-                {/* <form className="XX"> */}
-                    {/* <div className="input-field">
-                    <i className="myIcon material-icons prefix ">account_circle</i>
-                    <input id="icon_prefix" type="text" className="myTxtBox"
-                                                       value={this.state.name}
-                                                       onChange={this.handleChange}                    
-                    />
-                     <label htmlFor="icon_prefix" className="myTxtLable">First Name</label>
-                     </div> */}
                      <div className="input-field">
                     <i className="material-icons prefix">email</i>
-                    <input id="email" type="email" className="myInputBox" />
+                    <input id="email" type="email" className="myInputBox"
+                    value={this.state.new_email}
+                    onChange={this.handleEmailChange}
+                    />
                      <label htmlFor="email">Email</label>
                      </div>
                     {/* <div className="input-field">
@@ -90,11 +119,14 @@ class SignIn extends Component {
                     </div> */}
                     <div className="input-field">
                     <i className="material-icons prefix">lock</i>
-                    <input id="password" type="password" className="myInputBox" />
+                    <input id="password" type="password" className="myInputBox"
+                    value={this.state.new_password}
+                    onChange={this.handlePasswordChange}
+                    />
                      <label htmlFor="password">Password</label>
                      </div>
                     <div>
-                        <button className="myBtn btn " onClick={this.adder}>SIGN IN</button>
+                        <button className="myBtn btn " onClick={this.Checker}>SIGN IN</button>
                     </div>
                     {/* </form> */}
                     <div className="row">
@@ -124,4 +156,4 @@ const mapStateToProps=(state)=>{
     }
 };
 
-export default connect(mapStateToProps, {addUser, loadData})(SignIn);
+export default connect(mapStateToProps, {loginUser, loadDataUser})(SignIn);

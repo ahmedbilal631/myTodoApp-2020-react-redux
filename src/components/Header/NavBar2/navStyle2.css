@@ -1,3 +1,19 @@
+.myNotificationListItem :hover{
+    background-color: teal;
+    color: white;
+}
+.myNotificationListSubItem{
+    color: black;
+    font-weight: 500;
+    font-size: 13px;
+}
+#myNotifyBadge :hover{
+display: none;
+}
+/* .myViewNotificationsBtn :hover{
+ background-color: lightgray;
+} */
+
 .myLINav{
     /* background-color: #056910; */
     background-color: teal;
@@ -11,6 +27,12 @@
 }
 .myNavItem{
     margin-right: 1em;
+    font-family:  sans-serif;
+    font-weight: bold;
+}
+.myNavItemX{
+    margin-right: 1em;
+    margin-left: -3em;
     font-family:  sans-serif;
     font-weight: bold;
 }
@@ -34,7 +56,7 @@ Link{
 .sidenav li :hover{
      /* background-color: teal;  */
     color:white;
-    font-size: 18px;
+    /* font-size: 18px; */
     font-weight: bold;
 } 
 .mySN_items{

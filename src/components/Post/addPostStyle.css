@@ -4,6 +4,9 @@
     padding-bottom: 5px;
 }
 
+.myItemsVals{
+    font-weight: bold;
+}
 
 .myAPBody{
     background-image: url('../../media/bg_signUp.jpg');

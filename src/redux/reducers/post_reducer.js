@@ -5,21 +5,38 @@ import Dummy_Profile from '../../media/dummy_profile.jpg';
 //here a dumy id data for testing
 import Dummy_State from './dummy_posts';
 
+let initial_notification = [
+  {
+    notification_id: 786000,
+    post_id: 7891779300000,
+    post_creator_id: 'xyz123',
+    notification_date: 2020622, //for new notification identificaiton
+  },
+]
+let initial_state = {};
+let dum_state = {post_interest: 'all',posts: Dummy_State,notifications: initial_notification}
+let local_stored_posts = JSON.parse(localStorage.getItem('posts_state'));
+if(local_stored_posts === null){
+  initial_state = dum_state;
+}else{
+  initial_state = local_stored_posts;
+}
+
 //reducer starts here
-export default (state=Dummy_State, action)=>{
+export default (state= initial_state, action)=>{
     switch(action.type){
 
       //...............................Add post............................
         case types.add_post:
-            console.log('yes Add post call');
-            return state=[
-                ...state,
-                
-                  // id: Math.floor(Math.random() * 1000),
-                //   completed: false,
-                 action.payload,
-                ];
-  
+            let new_posts =state.posts;
+            new_posts = new_posts.push(action.payload.post);
+            let notifications = state.notifications.push(action.payload.notification)
+              // state.notifications.push(action.payload.notification)
+            console.log('yes Add post call', action.payload, new_posts);
+                 state = { ...state}
+                console.log('now post state', state);
+                localStorage.setItem('posts_state', JSON.stringify(state));
+                return state;  
               //..............................................Update...............  
           case types.update_post:
           console.log('update post from reducer', action.payload);
@@ -41,7 +58,7 @@ export default (state=Dummy_State, action)=>{
           case types.set_posts:
             console.log('you sent posts setting request post-reducer', action.payload);
             localStorage.setItem('display_posts_setting', action.payload.interest);
-            return state;
+            return state ={post_interest: action.payload.interest, ...state};
             //......................All posts........................................
           case types.all_posts:
             console.log('you sent all post request post-reducer', action.payload);
