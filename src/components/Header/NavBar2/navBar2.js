@@ -83,10 +83,10 @@ Extract_read_notifications = (new_list)=>{
     render() {
 
     //grab posts
-    let get_posts = this.props.posts.posts;
+    let get_posts = this.props.posts;
     //grab notifications
-    let get_notifications = this.props.posts.notifications;
-    console.log('notifications',get_notifications);
+    let get_notifications = this.props.notifications;
+    console.log('notifications from navbar 2',get_notifications);
     
     //grab user
     let user = this.props.user;
@@ -105,7 +105,7 @@ Extract_read_notifications = (new_list)=>{
     let notified_post = [];
     let temp = [];
     let tempX = [];
-    console.log('user read array from nav',user.notification_read, JSON.parse(localStorage.getItem('saved_read_notifications')));
+    console.log('user read array from nav',user.notification_read, JSON.parse(localStorage.getItem('notifications_state')));
     
     for (let k = 0; k<get_notifications.length; k++){
         if(get_notifications[k].notification_date >= (get_time - 7)){
@@ -276,6 +276,7 @@ const mapStateToProps=(state)=>{
     return{
         posts: state.posts,
         user: state.users,
+        notifications: state.notifications,
     }
 };
 

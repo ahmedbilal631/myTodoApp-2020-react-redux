@@ -42,6 +42,15 @@ export const update_post =(data)=>{
 }
 //................................................
 
+//this is update action
+export const del_post =(data)=>{
+    return{
+        type: types.del_post,
+        payload: data,
+    }    
+}
+//................................................
+
 //this will provide posts settings
 export const set_posts =(data)=>{
     return{

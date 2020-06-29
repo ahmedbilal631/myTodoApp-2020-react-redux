@@ -141,6 +141,7 @@ Checker= ()=>{
                     </div>
                     </div>
                     </div>
+                    {/* <Link to='/home'>Home direct</Link> */}
                     </div>
                     </div>
                     <SubFooter />

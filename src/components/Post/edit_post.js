@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import NavBar from '../Header/NavBar2/navBar2';
 import SubFooter from '../Footer/Sub_Footer';
 import Footer from '../Footer/Main_Footer/footer';
+import Side_Links from '../Side_Panel/side_links';
 // import './editProfileStyle.css';
 
 import {Link} from 'react-router-dom';
@@ -10,31 +11,40 @@ import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-countr
 
 
 import {connect} from 'react-redux';
-import {add_post, update_post} from '../../redux/actions/postAction/post_actions';
+import {add_post, update_post, loadData, del_post} from '../../redux/actions/postAction/post_actions';
+import {update_notification, del_notification} from '../../redux/actions/NotificatoinsAction/index';
 import Dp_Replacement from '../../media/dp_replacement.png'
 
 
 class Edit_post extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
+        let get_post_data = this.props.posts.filter((item)=> item.post_id === Number(localStorage.getItem('edit_post_code')))[0];
+        // console.log('getPostData', get_post_data);
+        
+
         this.state ={
             edit: false,
             isEmpty: false,
             re_enter: false,            
-                name : '',
-                status: '',
-                gender:'',
-                age_group: '',
-                disability: '',
-                location:'',
-                country:'',
-                region: '',
-                description:'',
-                resloved: false,
+                name : get_post_data.name,
+                status: get_post_data.status,
+                gender: get_post_data.gender,
+                age_group: get_post_data.age_group,
+                disability: get_post_data.disability,
+                location: get_post_data.location,
+                country: get_post_data.country,
+                region: get_post_data.region,
+                description: get_post_data.description,
+                // resloved: false,
+                post_status: get_post_data.post_status,
+                notification_id : '',
                 // password:'',
-                dp_image: '',
-                post_time: '',
-                posts_income: []
+                dp_image: get_post_data.dp_image,
+                post_time: get_post_data.post_time,
+                posts_income: this.props.posts,
+                ex_post: this.props.posts.filter((item)=> item.post_id === Number(localStorage.getItem('edit_post_code')))[0],
+                ex_notification: this.props.notifications.filter((item)=> item.post_id === Number(localStorage.getItem('edit_post_code')))[0],
 
             // recievedUsers: this.props.recievedUsers,
     }
@@ -45,14 +55,15 @@ class Edit_post extends Component {
 
 
     componentDidMount(){
-        this.setState({
-            posts_income: this.props.posts.posts
-        })
-        console.log('state', this.state);
-        
-        // this.loadAcc();
-        // this.props.loadData();
-        // console.log(this.props, 'from did mount');
+        console.log(
+            this.props.posts  );
+            console.log('state', this.state);
+            window.jQuery(document).ready(function(){
+                window.jQuery('.modal').modal();
+              });
+            // process
+            
+            
     }
 
 
@@ -166,18 +177,28 @@ class Edit_post extends Component {
         handleImgChange=event=>{
             let textX = this.state.dp_image;
             textX = event.target.value
-            console.log(textX, 'image path');
+            // console.log(textX, 'image path');
             this.setState({
                 dp_image: textX
             });
         }   
         //...........................................
+                //post status control
+                handlePostStatusChange=event=>{
+                    let textX = this.state.post_status;
+                    textX = event.target.value
+                    // console.log(textX, 'image path');
+                    this.setState({
+                        post_status: textX
+                    });
+                }   
+                //...........................................
     //state checker before update
-    Checker=(acc, old_posts, old_notifications)=>{
+    Checker=()=>{
         let captureState = this.state;
 
         if(captureState.dp_image === ''){
-            captureState.dp_image = acc.dp_image;}
+            captureState.dp_image = captureState.ex_post.dp_image;}
         if(captureState.name === ''){
             alert('name is empty');
             }
@@ -199,35 +220,14 @@ class Edit_post extends Component {
                                     else if(captureState.country === ''){
                                         alert('Please make sure country name.')}
                                         else{
-                                            this.AddNow(old_posts, old_notifications);
+                                            this.UpdateNow(captureState.ex_post, captureState.ex_notification);
                                           }
                                         
                                             
     }
     //..............................................
     //add function
-    AddNow=(old_posts, old_notifications)=>{
-        // console.log('id recieved', acc.user_id);
-     
-        //to get highest post id from old posts state
-        
-        let posts_array_length = old_posts.length-1;
-        let notifications_array_length = old_notifications.length-1;
-        //to get higher rank id
-        let higher_id_posts = 1000;
-        for(let i = 0; i<=posts_array_length; i = i+1){  
-            if(old_posts[i].post_id > higher_id_posts){
-                higher_id_posts = old_posts[i].post_id;
-            }
-        }
-        let higher_id_notification = 1000;
-    for(let i = 0; i<=notifications_array_length; i = i+1){  
-        if(old_notifications[i].notification_id > higher_id_notification){
-          higher_id_notification = old_notifications[i].notification_id;
-      }
-  }
-    //   console.log(higher_id_posts, ' add post higher id old array');  
-    //   console.log(higher_id_notification, ' add notification higher id old array');  
+    UpdateNow=(old_post, old_notification)=>{
      
         //time identity in a post
       let yr = new Date().getFullYear();
@@ -243,9 +243,9 @@ class Edit_post extends Component {
       //.........................................
         // console.log(this.state, 'state from add post');
         
-            this.props.add_post({
+            this.props.update_post({
                 post: {
-                post_id: higher_id_posts + 1,
+                post_id: old_post.post_id,
                 name : this.state.name,
                 status: this.state.status,
                 gender: this.state.gender,
@@ -259,67 +259,105 @@ class Edit_post extends Component {
                 post_time: this.state.post_time,
                 post_creator_email: this.props.user.email,
                 post_creator_name: this.props.user.name,
-                post_status: 'active', //active , in_active, resolved
+                post_status: this.state.post_status, //active , disabled, resolved
+                notification_id: old_notification.notification_id,
                 post_time: {
                     // month-year
                     date: dt, //0-30
                     month: mn + 1, //0-11
                     year: yr, //0-now
                 },
-                follwed_by: []
-            },
-        notification: {
-            notification_id: higher_id_notification +1,
-            post_id: higher_id_posts + 1,
-            post_creator_id: this.props.user.user_id,
-            notification_date: get_time,
-        }})
-            this.setState({
-                edit: false,
-                isEmpty: false,
-                re_enter: false,            
-                    name : '',
-                    status: '',
-                    gender:'',
-                    // number: '',
-                    age_group: '',
-                    disability: '',
-                    location:'',
-                    country:'',
-                    region: '',
-                    description:'',
-                    resloved: false,
-                    // password:'',
-                    dp_image: '',
-            });
+            }})
+
+            this.props.update_notification({
+                notification: {
+                    notification_id: old_notification.notification_id,
+                    post_id: old_post.post_id,
+                    post_creator_id: this.props.user.user_id,
+                    notification_date: get_time,
+                    notification_status: 'updated', //posted , updated
+                }
+            })
+
+
+            // this.setState({
+            //     edit: false,
+            //     isEmpty: false,
+            //     re_enter: false,            
+            //         name : '',
+            //         status: '',
+            //         gender:'',
+            //         // number: '',
+            //         age_group: '',
+            //         disability: '',
+            //         location:'',
+            //         country:'',
+            //         region: '',
+            //         description:'',
+            //         resloved: false,
+            //         // password:'',
+            //         dp_image: '',
+            // });
+            window.history.back();
         
     }
         //...............................................
-        Set_Data=(post)=>{
-            console.log(post, 'in set data');
-            
-            this.setState({
-                name : post.name,
-                status: '',
-                gender:'',
-                // number: '',
-                age_group: '',
-                disability: '',
-                location:'',
-                country:'',
-                region: '',
-                description:'',
-                resloved: false,
-                // password:'',
-                dp_image: '',
-            })
-        }
-        //Re-enter function
 
+        //Re-enter function
+        //age group evaluations
+GiveAge =(age_group)=>{
+    if(age_group === '14'){
+        return 'Less than 15 yrs'
+    }
+    else if(age_group === '18'){
+        return '15 to 20 yrs';
+    }
+    else if(age_group === '23'){
+        return '21 to 25 yrs';
+    }    else if(age_group === '27'){
+        return '26 to 30 yrs';
+    }    else if(age_group === '33'){
+        return '31 to 35 yrs';
+    }    else if(age_group === '37'){
+        return '36 to 40 yrs';
+    }    else if(age_group === '43'){
+        return '41 to 45 yrs';
+    }
+    else if(age_group === '47'){
+        return '46 to 50 yrs';
+    }
+    else{
+        return 'above 50 yrs'
+    }
+}
+//..........................................
+//to delete a post
+
+Delete=(id)=>{
+this.props.del_post({
+    id: id
+});
+this.props.del_notification({
+    id: id
+})
+window.history.back();
+// window.history.back();
+}
+
+//...........................................
+    //function to close the modal
+    closeModal=()=>{
+        // alert('yes close');
+
+        window.jQuery(document).ready(function(){
+            window.jQuery('.modal').sidenav('close');
+          });   
+}
+//...........................................
     render() {
-        let acc = this.props.posts.posts[0];
-        let posts_state = this.props.posts.posts;
-        let notifications_state = this.props.posts.notifications;
+        let acc = this.props.posts[0];
+        let posts_state = this.props.posts;
+        let notifications_state = this.props.notifications;
         // console.log(posts_state, 'current store');
         let local_posts = JSON.parse(localStorage.getItem('posts_state'));
         // console.log('from local storage', local_posts);
@@ -333,16 +371,16 @@ class Edit_post extends Component {
             disability,
             location,
             description,
-        dp_image } = this.state;
+        dp_image, ex_post, post_status } = this.state;
 
 //to get
 //set values in the component state
 let grab_post_code = Number(localStorage.getItem('edit_post_code'));
-console.log(grab_post_code);
+// console.log(grab_post_code);
 
 let extract_post = posts_state.filter((i)=> i.post_id === grab_post_code);
 // this.Set_Data(extract_post);
-console.log('before set data', extract_post);
+// console.log('before set data', extract_post);
 
 
 
@@ -377,12 +415,25 @@ console.log('before set data', extract_post);
                                     </tr>
                                     : */}
 
+
                                     {/* } */}
+
+                                    <tr>
+                                    <td className='myProfileItemTitle'>Post Status</td>
+                                    <td colSpan="2">
+                                    <select style={{border: 'none',}} onChange={this.handlePostStatusChange}>
+                                      <option value={post_status} disabled selected>{(post_status).toUpperCase()}</option>
+                                      <option value="active">Active</option>
+                                      <option value="disabled">Disable</option>
+                                      <option value="resolved">Resolved</option>
+                                    </select>
+                                    </td>
+                                </tr>
                                     <tr>
                                     <td className='myProfileItemTitle'>Status</td>
                                     <td colSpan="2">
                                     <select style={{border: 'none',}} onChange={this.handleStatusChange}>
-                                      <option value={status} disabled selected>Choose your option</option>
+                                <option value={status} disabled selected>{(status).toUpperCase()}</option>
                                       <option value="missing">Missing</option>
                                       <option value="found">Found</option>
                                     </select>
@@ -394,11 +445,12 @@ console.log('before set data', extract_post);
                                       <input placeholder="Person Name" value={name} onChange={this.handleNameChange} id="person_name" type="text" className="myAPTxtBox validate" />
                                     </td>
                                     </tr>
+
                                 <tr>
                                     <td className='myProfileItemTitle'>Gender</td>
                                     <td colSpan="2">
                                     <select style={{border: 'none',}} onChange={this.handleGenderChange}>
-                                      <option value={gender} disabled selected>Choose your option</option>
+                                      <option value={gender} disabled selected>{(gender).toUpperCase()}</option>
                                       <option value="male">Male</option>
                                       <option value="female">Female</option>
                                       <option value="other">Other</option>
@@ -409,7 +461,7 @@ console.log('before set data', extract_post);
                                     <td className='myProfileItemTitle'>Age Group</td>
                                     <td colSpan="2">
                                     <select style={{border: 'none',}} onChange={this.handleAgeChange}>
-                                      <option value={age_group} disabled selected>Choose your option</option>
+                                <option value={age_group} disabled selected>{this.GiveAge(age_group)}</option>
                                       <option value="14">Under-15 yrs</option>
                                       <option value="18">16-20 yrs</option>
                                       <option value="23">21-25 yrs</option>
@@ -426,15 +478,15 @@ console.log('before set data', extract_post);
                                     <td className='myProfileItemTitle'>Disability</td>
                                     <td colSpan="2">
                                     <select style={{border: 'none',}} onChange={this.handleDisabilityChange}>
-                                      <option value={disability} disabled selected>Choose your option</option>
-                                      <option value="mental">Mentally Disable</option>
-                                        <option value="hearing">Hearing Loss/Deafness</option>
-                                        <option value="memory">Memory Loss</option>
-                                        <option value="speak">Speech/Language Disorder</option>
-                                        <option value="vision">Vision Loss/Blindness</option>
-                                        <option value="physical">Any Physical Disability</option>
-                                        <option value="other">Others</option>
-                                        <option value="not_disabled">Not Disbaled</option>
+                                <option value={disability} disabled selected>{disability}</option>
+                                      <option value="Mentally Disable">Mentally Disable</option>
+                                        <option value="Hearing Loss/Deafness">Hearing Loss/Deafness</option>
+                                        <option value="Memory Loss">Memory Loss</option>
+                                        <option value="Speech/Language Disorder">Speech/Language Disorder</option>
+                                        <option value="Vision Loss/Blindness">Vision Loss/Blindness</option>
+                                        <option value="Any Physical Disability">Any Physical Disability</option>
+                                        <option value="Others">Others</option>
+                                        <option value="Not Disbaled">Not Disbaled</option>
                                     </select>
                                     </td>
                                 </tr>
@@ -521,28 +573,46 @@ console.log('before set data', extract_post);
                                 </tr> */}
                                 <tr>
                                     <td colSpan="2" className="center">
-                                    <button className="btn myUpdateBtnX myBtn" onClick={()=>{this.Checker(acc, posts_state, notifications_state)}}>Submit & Post</button>    
+                                    <button data-target="modal2"  className="btn myUpdateBtnX myBtn modal-trigger" >Update & Post</button>    
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colSpan="2" className="center">
+                                    <button data-target="modal1"  className="btn myUpdateBtnX myBtn modal-trigger" >Delete Post</button>    
                                     </td>
                                 </tr>
                             </table>
                             </div>
                         </div>
                         <div className="col s12 m4 l4 xl2">
-                            <div className="mySideLinksTitle">
-                                Futher
-                            </div>
-                            <div className="mySideLinksList">
-                                <ul>
-                                    <li><Link to='#your_posts'>Your posts</Link></li>
-                                    <li><Link to='#follow_up'>Follow up</Link></li>
-                                    <li><Link to='#notifications'>Notifications</Link></li>
-                                    <li><Link to='#settings'>Settings</Link></li>
-                                    <li><Link to='#help'>Help?</Link></li>
-                                    <li><Link to='#logout'>Logout</Link></li>
-                                </ul>
-                            </div>
+                            <Side_Links />
                         </div>
                     </div>
+       <div>
+                         <div id="modal1" className="modal">
+                           <div className="modal-content center">
+                              <h4 className="yellow text-red bold">WARNING!</h4>
+                              <p>Are you really want to delete this post?</p>
+                          </div>
+                         <div className="modal-footer">
+                            <Link to="#!" onClick={this.closeModal} className="modal-close waves-effect waves-green btn-flat">Cancel</Link>
+                            <p onClick={()=>{this.Delete(grab_post_code)}} className="modal-close waves-effect waves-green btn-flat">Confirm</p>
+                         </div>
+                        </div>
+                            </div>
+                            <div>
+                         <div id="modal2" className="modal">
+                           <div className="modal-content center">
+                              <h4 className="yellow text-red bold">Update & Publish!</h4>
+                              <p>Are you really want to update this post?</p>
+                          </div>
+                         <div className="modal-footer">
+                            <Link to="#!" onClick={this.closeModal} className="modal-close waves-effect waves-green btn-flat">Cancel</Link>
+                            <p onClick={()=>{this.Checker(acc, posts_state, notifications_state)}} className="modal-close waves-effect waves-green btn-flat">Confirm</p>
+                         </div>
+                        </div>
+                            </div>
+       
                 </div>
 
                     <Footer />
@@ -556,8 +626,9 @@ console.log('before set data', extract_post);
 const mapStateToProps=(state)=>{
     return{
         user: state.users,
-        posts: state.posts
+        posts: state.posts,
+        notifications: state.notifications,
     }
 };
 
-export default connect(mapStateToProps, {add_post, update_post})(Edit_post);
+export default connect(mapStateToProps, {add_post, update_post, loadData, update_notification, del_post, del_notification})(Edit_post);

@@ -23,12 +23,12 @@ state =  {
 
         //..........................................    
         componentDidMount(){
-              this.setState({
-                  posts: this.props.loadData(),
-                  user: this.props.loadDataUser(),
-              });
-              this.props.loadData();         
-              this.props.loadDataUser();         
+            //   this.setState({
+                //   posts: this.props.loadData(),
+                //   user: this.props.loadDataUser(),
+            //   });
+            //   this.props.loadData();         
+            //   this.props.loadDataUser();         
             } 
             
             //.......................................
@@ -80,10 +80,10 @@ GiveAge =(age_group)=>{
     render() {
 
             //grab posts
-    let get_posts = this.props.posts.posts;
+    let get_posts = this.props.posts;
     //grab notifications
-    let get_notifications = this.props.posts.notifications;
-    console.log('notifications',get_notifications);
+    let get_notifications = this.props.notifications;
+    console.log('notifications, from notifications',get_notifications);
     
     //grab user
     let user = this.props.user;
@@ -128,10 +128,24 @@ GiveAge =(age_group)=>{
     let push_flag = [];
     for(let y = 0; y<temp.length; y++){
         get_notifications = get_notifications.filter((item)=> item.notification_date !== temp[y].notification_date);
-
     }
+    // console.log('all notis', get_notifications);
+    // get_notifications.reverse();
+    // console.log('all notis after reverse', get_notifications);
+    
+    for(let i = 0; i<get_notifications.length; i++){
+        for(let j = 0; j<get_posts.length; j++){
+            if(get_notifications[i].post_id === get_posts[j].post_id){
+                all_notified_post.push(get_posts[j]);
+            }
+        }
+    }
+    
+    console.log("all notified posts",all_notified_post);
+    all_notified_post.reverse();
+    console.log("all notified posts after reverse",all_notified_post);
+    
 
-    console.log('all notis', get_notifications);
     
 
 
@@ -154,8 +168,8 @@ GiveAge =(age_group)=>{
                                 <ul className="collection">
                                     {notified_post.length !== 0?
                                     notified_post.map((item)=>(
-                                        <li className="collection-item avatar">
-                                        <Link to="#post">
+                                        <li className="collection-item avatar" onClick={()=>{localStorage.setItem('clicked_post_id',item.post_id);localStorage.setItem('interest','single'); }}>
+                                        <Link to="/display_posts">
                                        <img src={item.dp_image} alt="" className="circle" />
                                         <span className="title">{item.name}</span><span> is {this.Capitalize(item.status)}</span>
                                           <p className="myNotificationListSubItem">Posted By - , {this.Capitalize(user.name)}</p>
@@ -188,12 +202,12 @@ GiveAge =(age_group)=>{
                             </li>
                             
                             {
-                                get_notifications.map((item)=>(
-                                    <li className="collection-item avatar">
-                                    <Link to="#post">
+                                all_notified_post.map((item)=>(
+                                    <li className="collection-item avatar" onClick={()=>{localStorage.setItem('clicked_post_id',item.post_id);localStorage.setItem('interest','single'); }}>
+                                    <Link to="/display_posts">
                                    <img src={item.dp_image} alt="" className="circle" />
                                     <span className="title">{item.name}</span><span> is {this.Capitalize(item.status)}</span>
-                                      <p className="myNotificationListSubItem">Posted By - , {this.Capitalize(user.name)}</p>
+                                      <p className="myNotificationListSubItem">Posted By - , {this.Capitalize( user.name)}</p>
                                       <p className="myNotificationListSubItem">{item.region}, {item.country}</p>
                                       <p className="myNotificationListSubItem">Age approx - , {this.GiveAge(item.age_group)}</p>
                                       <p className="myNotificationListSubItem">{item.post_time.date},{item.post_time.month}, {item.post_time.year}</p>
@@ -257,6 +271,7 @@ const mapStateToProps=(state)=>{
     return{
         posts: state.posts,
         user: state.users,
+        notifications: state.notifications,
     }
 };
 

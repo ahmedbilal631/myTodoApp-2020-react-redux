@@ -57,20 +57,22 @@ class Display_Posts extends Component {
     }
     //...................................
 
+
     render() {
         //getting user data
         let user = this.props.user;
         //...................................................
         //posts interest selection
-        let posts_interest = localStorage.getItem('display_posts_setting');
+        let posts_interest = localStorage.getItem('interest');
         //getting all the post from store
-        let get_posts  = this.props.posts.posts;
+        let get_posts  = this.props.posts;
         console.log(posts_interest,get_posts);
 
         //.....................................................
         //to get Your Posts functions
         //getting your email from local storage to display your posts
-        let post_creator_email = localStorage.getItem('post_creator_email'); 
+        // let post_creator_email = localStorage.getItem('post_creator_email'); 
+        let post_creator_email = user.email; 
 
         let your_posts = get_posts.filter((item)=> item.post_creator_email === post_creator_email);
         console.log(your_posts, 'your post');
@@ -86,7 +88,7 @@ class Display_Posts extends Component {
         //getting your email from local storage to display your posts
         // let post_creator_email = localStorage.getItem('post_creator_email') 
 
-        let your_in_active_posts = get_posts.filter((item)=> item.post_creator_email === post_creator_email && item.post_status === 'in_active');
+        let your_in_active_posts = get_posts.filter((item)=> item.post_creator_email === post_creator_email && item.post_status === 'disabled');
         console.log(your_in_active_posts, 'your in active post');
         //...................................................
         //to get Your Resolved Posts functions
@@ -98,16 +100,16 @@ class Display_Posts extends Component {
         console.log(your_resolved_posts, 'your resolved post');
         //...................................................
         //functions for your followed posts
-        let followed_posts_id = this.props.user.followed_posts;
-        console.log("followed posts", followed_posts_id);
+        let followed_posts_ids = this.props.user.followed_posts;
+        console.log("followed posts", followed_posts_ids);
         let followed_posts = [];
-        if(followed_posts_id.length !== -1){
+        // if(followed_posts_ids.length !== 0){
 
-            for (let i =0; i < followed_posts_id.length; i++){
-                let temp_post = get_posts.filter((item)=> item.post_id === followed_posts_id[i]);
-                followed_posts.push(temp_post[0]);
-            }
-        }
+        //     for (let i =0; i < followed_posts_ids.length; i++){
+        //         followed_posts = get_posts.filter((item)=> item.post_id === followed_posts_ids[i]);
+        //         // followed_posts.push(temp_post[0]);
+        //     }
+        // }
             console.log('followed post', followed_posts);
 
             //..............................................
@@ -136,8 +138,8 @@ class Display_Posts extends Component {
         }
       }
         for(let k = 0; k<=posts_array_length; k++){
-          const target_index =get_posts.findIndex((item) => { return item.post_id == higher_id});
-          if(target_index != -1){
+          const target_index =get_posts.findIndex((item) => { return item.post_id === higher_id});
+          if(target_index !== -1){
             // console.log(target_index, '+ve');
             recent_posts.push(get_posts[target_index]);
             higher_id = higher_id - 1;
@@ -147,8 +149,10 @@ class Display_Posts extends Component {
             higher_id = higher_id - 1;
           }
         }
+        recent_posts.reverse();
     //   console.log(recent_posts, 'for recent posts loop'); 
       //...............................................................
+      let your_clicked_posts = this.props.posts.filter((i)=>i.post_id === Number(localStorage.getItem('clicked_post_id')));
       //list of posts to be displayed
       let display_list = [];
       let display_page_title = 'Not Specified';
@@ -169,11 +173,16 @@ class Display_Posts extends Component {
             display_list = your_in_active_posts;
         }else if(posts_interest === 'followed'){
             display_page_title = 'YOUR FOLLOWED POSTS';
-            display_list = followed_posts;
+            // display_list = followed_posts;
         }else if(posts_interest === 'resolved'){
             display_page_title = 'YOUR RESOLVED POSTS';
             display_list = your_resolved_posts;
+        }else if(posts_interest === 'single'){
+            display_page_title = 'POST VIEWED';
+            display_list = your_clicked_posts;
         }
+        // display_list.reverse();
+
         console.log("display_list", display_list);          
         console.log("display_list", (display_list).length);          
         //................................................
@@ -190,7 +199,7 @@ class Display_Posts extends Component {
                             <div className="row">
                             {display_list.length !== 0?                           
                             display_list.map((item, index)=>(
-                                <div className="col s12 m12 l6 xl4" key={item.post_id}>
+                                <div className={localStorage.getItem('interest') === 'single'? "col s12 m12 l12 xl12":'col s12 m12 l6 xl4'} key={item.post_id}>
                                 <div className="card sticky-action">
                                 <div className="card-content row">
                                         <div className="col s6 m6 l6 xl6">
@@ -201,7 +210,7 @@ class Display_Posts extends Component {
                                         </div>
                                     </div>
                                  <div className="card-image waves-effect waves-block waves-light">
-                                <img className="activator" src={item.dp_image} alt="images/office.jpg" />
+                                <img className="activator"   src={item.dp_image} alt="images/office.jpg" />
                                 </div>
                                 <div className="card-content">
                                     <div className="row">
@@ -223,7 +232,7 @@ class Display_Posts extends Component {
                    
                                     <div className="row">
                                         <div className="col s6 m6 l6 xl6">Country -</div>
-                                      <div className="myItemsVals col s6 m6 l6 xl6">{item.country}</div>
+                                      <div className="myItemsVals col s6 m6 l6 xl6">{(item.country).slice(0,9)}</div>
                                     </div>
                                     <div className="row">
                                         <div className="col s6 m6 l6 xl6">Region -</div>

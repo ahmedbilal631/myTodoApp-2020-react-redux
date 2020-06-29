@@ -235,15 +235,15 @@ ChangeSearchWay =(filter)=>{
                 let final = [];
                 //To start search
                 if(this.state.proceed_search){
-
+                    
                     //by status
                     if(this.state.status !== ''){
                         temp = given_arr.filter((i)=> i.status === this.state.status);         
                  }else{
                      console.log('temp found empty in search', temp);
                      temp = given_arr;
-                 }
-
+                    }
+                    let temp_length = temp.length;
                     //by age                
                     console.log(this.state.age_group);
                     if(temp_length !== 0 && this.state.age_group !== ''){
@@ -259,7 +259,6 @@ ChangeSearchWay =(filter)=>{
                 final = temp;
                 console.log(final, 'from search after age');
                 //by gender
-                let temp_length = temp.length;
                 if(temp_length !== 0 && this.state.gender !== ''){
                     temp = temp.filter((i)=> i.gender === this.state.gender);         
                 }else{
@@ -354,58 +353,60 @@ ChangeSearchWay =(filter)=>{
 ///...................................................................
 
             //grab posts
-    let get_posts = this.props.posts.posts;
+    let get_posts = this.props.posts;
     //grab notifications
-    let get_notifications = this.props.posts.notifications;
-    console.log('notifications',get_notifications);
+    // let get_notifications = this.props.notifications;
+    // console.log('notifications',get_notifications);
     
-    //grab user
+    // //grab user
     let user = this.props.user;
+    console.log('state=search', this.state);
     
-    //to get today date..........................
-            let yr = new Date().getFullYear();
-            let mn = new Date().getMonth();
-            let dt = new Date().getDate();
-            let hr = new Date().getHours().toString();
-            let min = new Date().getMinutes().toString();
-            let get_time =Number( yr.toString()+(mn + 1).toString()+dt.toString());
-            console.log(get_time, 'form time number notification page');
-
-
-
-    //posts extract acc to notification
-    let notified_post = [];
-    let temp = [];
-    // console.log('user read array from nav',user.notification_read, JSON.parse(localStorage.getItem('saved_read_notifications')));
     
-    for (let k = 0; k<get_notifications.length; k++){
-        if(get_notifications[k].notification_date >= (get_time - 2)){
-            temp.push(get_notifications[k]);
-        }
-    }
-    console.log('let temp', temp, 'get', get_notifications, 'from notifications page');
+    // //to get today date..........................
+    //         let yr = new Date().getFullYear();
+    //         let mn = new Date().getMonth();
+    //         let dt = new Date().getDate();
+    //         let hr = new Date().getHours().toString();
+    //         let min = new Date().getMinutes().toString();
+    //         let get_time =Number( yr.toString()+(mn + 1).toString()+dt.toString());
+    //         console.log(get_time, 'form time number notification page');
+
+
+
+    // //posts extract acc to notification
+    // let notified_post = [];
+    // let temp = [];
+    // // console.log('user read array from nav',user.notification_read, JSON.parse(localStorage.getItem('saved_read_notifications')));
+    
+    // for (let k = 0; k<get_notifications.length; k++){
+    //     if(get_notifications[k].notification_date >= (get_time - 2)){
+    //         temp.push(get_notifications[k]);
+    //     }
+    // }
+    // console.log('let temp', temp, 'get', get_notifications, 'from notifications page');
    
-    for(let i = 0; i<temp.length; i++){
-        for(let j = 0; j<get_posts.length; j++){
-            if(temp[i].post_id === get_posts[j].post_id){
-                notified_post.push(get_posts[j]);
-            }
-        }
-    }
-    notified_post.reverse();
-    console.log('notified posts', notified_post);
+    // for(let i = 0; i<temp.length; i++){
+    //     for(let j = 0; j<get_posts.length; j++){
+    //         if(temp[i].post_id === get_posts[j].post_id){
+    //             notified_post.push(get_posts[j]);
+    //         }
+    //     }
+    // }
+    // notified_post.reverse();
+    // console.log('notified posts', notified_post);
 
-    //.................................................................
+    // //.................................................................
 
 
-    let all_notified_post = [];
-    let push_flag = [];
-    for(let y = 0; y<temp.length; y++){
-        get_notifications = get_notifications.filter((item)=> item.notification_date !== temp[y].notification_date);
+    // let all_notified_post = [];
+    // let push_flag = [];
+    // for(let y = 0; y<temp.length; y++){
+    //     get_notifications = get_notifications.filter((item)=> item.notification_date !== temp[y].notification_date);
 
-    }
+    // }
 
-    console.log('all notis', get_notifications);
+    // console.log('all notis', get_notifications);
     
 
 
@@ -426,7 +427,7 @@ ChangeSearchWay =(filter)=>{
                         <div className="col s12 m8 l8 xl9">
                             <div className="myLeftPanel">
                                 {
-                                    this.state.show_results?
+                                    this.state.show_results === true?
                                     <p className="myPanelTitle">
                                         Found results- ({this.state.display_posts.length}) _only.
                                     </p>
@@ -437,7 +438,7 @@ ChangeSearchWay =(filter)=>{
                                 }
                                 <div className="mySearchBox">
                                     {
-                                        this.state.show_results?
+                                        this.state.show_results === true?
                                         <div className="row">
                                             {this.state.display_posts.length !== 0?
                                         <div>{
@@ -551,7 +552,7 @@ ChangeSearchWay =(filter)=>{
                           ))
                         }
                               <p>
-                                <button className=" btn waves-effect waves-light myBtn" onClick={this.setState({show_results: false})} >Back to search</button>
+                                <button className=" btn waves-effect waves-light myBtn" onClick={()=>{this.setState({show_results: false})}} >Back to search</button>
                               </p>
                           </div>
                           :
@@ -565,6 +566,13 @@ ChangeSearchWay =(filter)=>{
                                         {/* <div>Choose your options</div> */}
 
                                         <div>
+                                            <p>
+                                            <select className='myFormBox' onChange={this.handleStatusChange}>
+                                                <option value={status} disabled selected>Choose person status</option>
+                                                  <option value="missing">Missing</option>
+                                                  <option value="found">Found</option>
+                                    </select>
+                                            </p>
                                             <p>
                                         <select  className='myFormBox' onChange={this.handleAgeChange}>
                                                 <option value={age_group} disabled selected>Select age group</option>
@@ -611,14 +619,14 @@ ChangeSearchWay =(filter)=>{
                                         <div>
                                         <select  className='myFormBox' onChange={this.handleDisabilityChange}>
                                               <option value={disability} disabled selected>Choose disability (if any)</option>
-                                              <option value="mental">Mentally Disable</option>
-                                                <option value="hearing">Hearing Loss/Deafness</option>
-                                                <option value="memory">Memory Loss</option>
-                                                <option value="speak">Speech/Language Disorder</option>
-                                                <option value="vision">Vision Loss/Blindness</option>
-                                                <option value="physical">Any Physical Disability</option>
-                                                <option value="other">Others</option>
-                                                <option value="not_disabled">Not Disbaled</option>
+                                              <option value="Mentally Disable">Mentally Disable</option>
+                                                <option value="Hearing Loss/Deafness">Hearing Loss/Deafness</option>
+                                                <option value="Memory Loss">Memory Loss</option>
+                                                <option value="Speech/Language Disorder">Speech/Language Disorder</option>
+                                                <option value="Vision Loss/Blindness">Vision Loss/Blindness</option>
+                                                <option value="Any Physical Disability">Any Physical Disability</option>
+                                                <option value="Others">Others</option>
+                                                <option value="Not Disbaled">Not Disbaled</option>
                                             </select>
                                         </div>
                                         <div>

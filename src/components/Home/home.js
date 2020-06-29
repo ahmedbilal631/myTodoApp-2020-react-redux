@@ -198,7 +198,7 @@ Sorry, There is no post to display.
 render() {
   //get logged in user
   let user = this.props.user;
-  let get_posts = this.props.posts.posts;
+  let get_posts = this.props.posts;
     get_posts = get_posts.filter((item)=> item.post_status === 'active');
       // console.log(get_posts, 'get post');
       
@@ -364,7 +364,7 @@ render() {
           <div className="col s12 m12 l12 xl12">
           {recent_posts.length !== 0?
           <Link to='/display_posts'>
-          <button className="btn myUpdateBtnX myBtn" onClick={()=>{this.props.set_posts({interest: 'recent'}); console.log("call for all posts");
+          <button className="btn myUpdateBtnX myBtn" onClick={()=>{localStorage.setItem('interest','recent'); console.log("call for recent posts");
           }}>View all</button>
           </Link>
           :

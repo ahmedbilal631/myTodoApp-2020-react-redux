@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import NavBar from '../Header/NavBar2/navBar2';
 import SubFooter from '../Footer/Sub_Footer';
 import Footer from '../Footer/Main_Footer/footer';
+import Side_Links from '../Side_Panel/side_links';
 // import './editProfileStyle.css';
 
 import {Link} from 'react-router-dom';
@@ -11,6 +12,7 @@ import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-countr
 
 import {connect} from 'react-redux';
 import {add_post, update_post} from '../../redux/actions/postAction/post_actions';
+import {add_notification} from '../../redux/actions/NotificatoinsAction/index';
 import Dp_Replacement from '../../media/dp_replacement.png'
 
 
@@ -167,11 +169,11 @@ class Add_post extends Component {
         }   
         //...........................................
     //state checker before update
-    Checker=(acc, old_posts, old_notifications)=>{
+    Checker=(old_posts, old_notifications)=>{
         let captureState = this.state;
 
         if(captureState.dp_image === ''){
-            captureState.dp_image = acc.dp_image;}
+            captureState.dp_image = 'https://pixabay.com/images/id-5307219/';}
         if(captureState.name === ''){
             alert('name is empty');
             }
@@ -204,17 +206,18 @@ class Add_post extends Component {
         // console.log('id recieved', acc.user_id);
      
         //to get highest post id from old posts state
+        console.log('old posts', old_posts, 'old noti' , old_notifications);
         
         let posts_array_length = old_posts.length-1;
         let notifications_array_length = old_notifications.length-1;
         //to get higher rank id
-        let higher_id_posts = 1000;
+        let higher_id_posts =7891779300000;
         for(let i = 0; i<=posts_array_length; i = i+1){  
             if(old_posts[i].post_id > higher_id_posts){
                 higher_id_posts = old_posts[i].post_id;
             }
         }
-        let higher_id_notification = 1000;
+        let higher_id_notification = 786000;
     for(let i = 0; i<=notifications_array_length; i = i+1){  
         if(old_notifications[i].notification_id > higher_id_notification){
           higher_id_notification = old_notifications[i].notification_id;
@@ -253,7 +256,8 @@ class Add_post extends Component {
                 post_time: this.state.post_time,
                 post_creator_email: this.props.user.email,
                 post_creator_name: this.props.user.name,
-                post_status: 'active', //active , in_active, resolved
+                post_status: 'active', //active , disabled, resolved
+                notification_id: higher_id_notification +1,
                 post_time: {
                     // month-year
                     date: dt, //0-30
@@ -262,12 +266,17 @@ class Add_post extends Component {
                 },
                 follwed_by: []
             },
-        notification: {
-            notification_id: higher_id_notification +1,
-            post_id: higher_id_posts + 1,
-            post_creator_id: this.props.user.user_id,
-            notification_date: get_time,
-        }})
+ });
+            //actions making for notification
+            this.props.add_notification({
+                notification: {
+                    notification_id: higher_id_notification +1,
+                    post_id: higher_id_posts + 1,
+                    post_creator_id: this.props.user.user_id,
+                    notification_date: get_time,
+                    notification_status: 'posted', //posted , updated
+                }
+            })
             this.setState({
                 edit: false,
                 isEmpty: false,
@@ -292,10 +301,11 @@ class Add_post extends Component {
         //Re-enter function
 
     render() {
-        let acc = this.props.posts.posts[0];
-        let posts_state = this.props.posts.posts;
-        let notifications_state = this.props.posts.notifications;
-        // console.log(posts_state, 'current store');
+        // let acc = this.props.posts.posts[0];
+        let posts_state = this.props.posts;
+        let notifications_state = this.props.notifications;
+        // console.log('posts recieved', posts_state, 'notifications', notifications_state,'from add post');
+        
         let local_posts = JSON.parse(localStorage.getItem('posts_state'));
         // console.log('from local storage', local_posts);
         
@@ -488,26 +498,14 @@ class Add_post extends Component {
                                 </tr> */}
                                 <tr>
                                     <td colSpan="2" className="center">
-                                    <button className="btn myUpdateBtnX myBtn" onClick={()=>{this.Checker(acc, posts_state, notifications_state)}}>Submit & Post</button>    
+                                    <button className="btn myUpdateBtnX myBtn" onClick={()=>{this.Checker(posts_state, notifications_state)}}>Submit & Post</button>    
                                     </td>
                                 </tr>
                             </table>
                             </div>
                         </div>
                         <div className="col s12 m4 l4 xl2">
-                            <div className="mySideLinksTitle">
-                                Futher
-                            </div>
-                            <div className="mySideLinksList">
-                                <ul>
-                                    <li><Link to='#your_posts'>Your posts</Link></li>
-                                    <li><Link to='#follow_up'>Follow up</Link></li>
-                                    <li><Link to='#notifications'>Notifications</Link></li>
-                                    <li><Link to='#settings'>Settings</Link></li>
-                                    <li><Link to='#help'>Help?</Link></li>
-                                    <li><Link to='#logout'>Logout</Link></li>
-                                </ul>
-                            </div>
+                            <Side_Links />                                       
                         </div>
                     </div>
                 </div>
@@ -523,8 +521,9 @@ class Add_post extends Component {
 const mapStateToProps=(state)=>{
     return{
         user: state.users,
-        posts: state.posts
+        posts: state.posts,
+        notifications: state.notifications
     }
 };
 
-export default connect(mapStateToProps, {add_post, update_post})(Add_post);
+export default connect(mapStateToProps, {add_post, update_post, add_notification})(Add_post);
