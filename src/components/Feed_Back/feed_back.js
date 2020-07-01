@@ -4,19 +4,19 @@ import SubFooter from '../Footer/Sub_Footer';
 import Footer from '../Footer/Main_Footer/footer';
 import Side_Links from '../Side_Panel/side_links';
 // import './editProfileStyle.css';
-import { ToastContainer, toast } from 'react-toastify';
+
 import {Link} from 'react-router-dom';
 import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
 
 
 
 import {connect} from 'react-redux';
-import {add_post, update_post} from '../../redux/actions/postAction/post_actions';
-import {add_notification} from '../../redux/actions/NotificatoinsAction/index';
+import {send_feedback, send_report} from '../../redux/actions/Feedback/feedback_actions';
+
 import Dp_Replacement from '../../media/dp_replacement.png'
 
 
-class Add_post extends Component {
+class Feed_Back extends Component {
     constructor(){
         super();
         this.state ={
@@ -24,18 +24,16 @@ class Add_post extends Component {
             isEmpty: false,
             re_enter: false,            
                 name : '',
-                status: '',
-                gender:'',
-                age_group: '',
-                disability: '',
-                location:'',
+                email: '',
                 country:'',
                 region: '',
+                subject: '',
                 description:'',
-                resloved: false,
-                // password:'',
                 dp_image: '',
                 post_time: '',
+                post_id: localStorage.getItem('isReport') !== null? Number(localStorage.getItem('reported_post_id')) : '' ,
+                  // report
+                  msg_type: localStorage.getItem('msg_type') === 'report'? 'report': 'feedback',
 
             // recievedUsers: this.props.recievedUsers,
     }
@@ -53,16 +51,7 @@ class Add_post extends Component {
 
 
     //...................................
-        //status control
-        handleStatusChange=event=>{
-            let textX = this.state.status;
-            textX = event.target.value
-            // console.log(textX, 'yes status change');
-            this.setState({
-                status: textX
-            });
-        }
-        //...........................................
+
     //name editing
     handleNameChange=event=>{
 
@@ -76,58 +65,33 @@ class Add_post extends Component {
     }
 
     //............................................
+        //name editing
+        handleSubjectChange=event=>{
 
-        //gender editing control
-        handleGenderChange=event=>{
-            let textX = this.state.gender;
+            let textX = this.state.subject;
             textX = event.target.value
             // console.log(textX);
             this.setState({
-                gender: textX
+                subject: textX
+                // name: textX.name
             });
         }
     
-        //...........................................
-        //email editing control
-        handleAgeChange=event=>{
-        let textX = this.state.age_group;
+        //............................................
+            //name editing
+    handleEmailChange=event=>{
+
+        let textX = this.state.email;
         textX = event.target.value
         // console.log(textX);
         this.setState({
-            age_group: textX
+            email: textX
+            // name: textX.name
         });
     }
-    //...........................................
-        //address editing control
-        handleLocationChange=event=>{
-            let textX = this.state.location;
-            textX = event.target.value
-            // console.log(textX);
-            this.setState({
-                location: textX
-            });
-        }    
-        //...........................................
-            //disability  control
-    handleDisabilityChange=event=>{
-        let textX = this.state.disability;
-        textX = event.target.value
-        // console.log(textX);
-        this.setState({
-            disability: textX
-        });
-    }
-    //...........................................
-         //Country editing control
-    //     handleCountryChange=event=>{
-    //     let textX = this.state.country;
-    //     textX = event.target.value
-    //     // console.log(textX);
-    //     this.setState({
-    //         country: textX
-    //     });
-    // }
-    //...........................................
+
+    //............................................
+
     //country selector
     selectCountry (val) {
         this.setState({ country: val });
@@ -138,16 +102,6 @@ class Add_post extends Component {
         this.setState({ region: val });
       }
       //........................................
-        //number editing control
-        handleNumberChange=event=>{
-            let textX = this.state.number;
-            textX = event.target.value
-            // console.log(textX);
-            this.setState({
-                number: textX
-            });
-        }
-        //...........................................
           //description editing control
           handleDescriptionChange=event=>{
             let textX = this.state.description;
@@ -169,64 +123,33 @@ class Add_post extends Component {
         }   
         //...........................................
     //state checker before update
-    Checker=(old_posts, old_notifications)=>{
+    Checker=(user)=>{
         let captureState = this.state;
 
         if(captureState.dp_image === ''){
             captureState.dp_image = 'https://pixabay.com/images/id-5307219/';}
         if(captureState.name === ''){
             alert('name is empty');
-            }
-            else if(captureState.age_group === ''){
-                alert('plz select an age group');
-                }
-                else if(captureState.status === ''){
-                alert('Please select status');
-                }
-                    else if(captureState.gender === ''){
-                        alert('Please select a gender');
-                        }
-                        else if(captureState.disability === ''){
-                            alert('Please identify any disability?');
-                            }
-                                else if(captureState.location === ''){
-                                    alert('Kindly enter a location address.');
-                                    }
-                                    else if(captureState.country === ''){
+            }                                    else if(captureState.country === ''){
                                         alert('Please make sure country name.')}
                                         else{
-                                            this.AddNow(old_posts, old_notifications);
-                                          }
+                                            this.AddNow(user);
+                                        }
                                         
-                                            
-    }
-    //..............................................
+                                        
+                                    }
+                                    //..............................................
     //add function
-    AddNow=(old_posts, old_notifications)=>{
+    AddNow=(user)=>{
         // console.log('id recieved', acc.user_id);
      
         //to get highest post id from old posts state
-        console.log('old posts', old_posts, 'old noti' , old_notifications);
+        console.log('got user in report', user);
         
-        let posts_array_length = old_posts.length-1;
-        let notifications_array_length = old_notifications.length-1;
-        //to get higher rank id
-        let higher_id_posts =7891779300000;
-        for(let i = 0; i<=posts_array_length; i = i+1){  
-            if(old_posts[i].post_id > higher_id_posts){
-                higher_id_posts = old_posts[i].post_id;
-            }
-        }
-        let higher_id_notification = 786000;
-    for(let i = 0; i<=notifications_array_length; i = i+1){  
-        if(old_notifications[i].notification_id > higher_id_notification){
-          higher_id_notification = old_notifications[i].notification_id;
-      }
-  }
-    //   console.log(higher_id_posts, ' add post higher id old array');  
+        //   console.log(higher_id_posts, ' add post higher id old array');  
     //   console.log(higher_id_notification, ' add notification higher id old array');  
-     
-        //time identity in a post
+    
+    //time identity in a post
       let yr = new Date().getFullYear();
       let mn = new Date().getMonth();
       let dt = new Date().getDate();
@@ -238,71 +161,94 @@ class Add_post extends Component {
           post_time: get_time
       })
       //.........................................
-        // console.log(this.state, 'state from add post');
-        
-            this.props.add_post({
-                post: {
-                post_id: higher_id_posts + 1,
-                name : this.state.name,
-                status: this.state.status,
-                gender: this.state.gender,
-                age_group: this.state.age_group,
-                disability: this.state.disability,
-                location: this.state.location,
-                country: this.state.country,
-                region: this.state.region,
-                description: this.state.description,
-                dp_image: this.state.dp_image,
-                post_time: this.state.post_time,
-                post_creator_email: this.props.user.email,
-                post_creator_name: this.props.user.name,
-                post_status: 'active', //active , disabled, resolved
-                notification_id: higher_id_notification +1,
-                post_time: {
-                    // month-year
-                    date: dt, //0-30
-                    month: mn + 1, //0-11
-                    year: yr, //0-now
-                },
-                follwed_by: []
-            },
- });
-            //actions making for notification
-            this.props.add_notification({
-                notification: {
-                    notification_id: higher_id_notification +1,
-                    post_id: higher_id_posts + 1,
-                    post_creator_id: this.props.user.user_id,
-                    notification_date: get_time,
-                    notification_status: 'posted', //posted , updated
-                }
-            })
-            toast('post added.',  {
-                position: "bottom-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+      // console.log(this.state, 'state from add post');
+
+      //msg is here
+      
+      let report_msg = {};
+      let feedback_msg = {};
+      let msg_type = this.state.msg_type;
+      if(msg_type === 'report'){
+          report_msg = {
+              reported_post_id: this.state.post_id,
+              name: this.state.name,
+              email: this.state.email,
+              country: this.state.country,
+              region: this.state.region,
+              subject: this.state.subject,
+              description: this.state.description,
+              send_time: {
+                  date: dt, month: mn, year: yr
+              }
+            }
+            this.props.send_feedback(feedback_msg);
             this.setState({
                 edit: false,
                 isEmpty: false,
                 re_enter: false,            
+                    dp_image: '',
                     name : '',
-                    status: '',
-                    gender:'',
-                    // number: '',
-                    age_group: '',
-                    disability: '',
-                    location:'',
+                    email: '',
                     country:'',
                     region: '',
+                    subject: '',
                     description:'',
-                    resloved: false,
-                    // password:'',
                     dp_image: '',
+                    send_time: '',
+                    post_id: '',
+            });
+        }else if(msg_type === 'feedback'){
+            feedback_msg = {
+                post_id: this.state.post_id,
+                name: this.state.name,
+                email: this.state.email,
+            country: this.state.country,
+            region: this.state.region,
+            subject: this.state.subject,
+            description: this.state.description,
+            snap_shot: this.state.dp_image,
+            send_time: {
+                date: dt, month: mn, year: yr
+            }
+        }
+
+        this.props.send_report(report_msg);
+        this.setState({
+            edit: false,
+            isEmpty: false,
+            re_enter: false,            
+                dp_image: '',
+                name : '',
+                email: '',
+                country:'',
+                region: '',
+                subject: '',
+                description:'',
+                dp_image: '',
+                send_time: '',
+                post_id: '',
+        });
+
+    }
+      console.log("before submission msg", report_msg, 'feedback=>', feedback_msg);
+      
+
+            localStorage.setItem('isReport', null);
+
+            this.setState({
+                edit: false,
+                isEmpty: false,
+                re_enter: false,            
+                    dp_image: '',
+                    name : '',
+                    email: '',
+                    country:'',
+                    region: '',
+                    subject: '',
+                    description:'',
+                    dp_image: '',
+                    send_time: '',
+                    post_id: '',
             });
         
     }
@@ -312,14 +258,16 @@ class Add_post extends Component {
     render() {
         // let acc = this.props.posts.posts[0];
         let posts_state = this.props.posts;
-        let notifications_state = this.props.notifications;
+        let user = this.props.user;
         // console.log('posts recieved', posts_state, 'notifications', notifications_state,'from add post');
         
-        let local_posts = JSON.parse(localStorage.getItem('posts_state'));
         // console.log('from local storage', local_posts);
         
         const { country, region,
             name,
+            msg_type,
+            subject,
+            email,
             status,
             gender,
             // number: '',
@@ -340,7 +288,7 @@ class Add_post extends Component {
                 <NavBar />
                 <div className="myAdBox">
                     <p className="myPageTitle">
-                        NEW POST
+                        {localStorage.getItem('msg_type')==='report'? "REPORT": "FEEDBACK"}
                     </p>
 
                 </div>
@@ -365,12 +313,14 @@ class Add_post extends Component {
 
                                     {/* } */}
                                     <tr>
-                                    <td className='myProfileItemTitle'>Status</td>
+                                    <td className='myProfileItemTitle'>Type</td>
                                     <td colSpan="2">
-                                    <select style={{border: 'none',}} onChange={this.handleStatusChange}>
-                                      <option value={status} disabled selected>Choose your option</option>
-                                      <option value="missing">Missing</option>
-                                      <option value="found">Found</option>
+                                    <select style={{border: 'none',}} onChange={this.handleTypeChange}>
+                                <option value={msg_type} disabled selected>{msg_type==='report'? "REPORT": "FEEDBACK"}</option>
+                                      <option value="report">Report</option>
+                                      <option value="feedback">Feedback</option>
+                                      <option value="request">Request</option>
+                                      <option value="other">Other</option>
                                     </select>
                                     </td>
                                 </tr>
@@ -380,57 +330,13 @@ class Add_post extends Component {
                                       <input placeholder="Person Name" value={name} onChange={this.handleNameChange} id="person_name" type="text" className="myAPTxtBox validate" />
                                     </td>
                                     </tr>
-                                <tr>
-                                    <td className='myProfileItemTitle'>Gender</td>
+                                    <tr>    
+                                    <td className='myProfileItemTitle'>Email</td>
                                     <td colSpan="2">
-                                    <select style={{border: 'none',}} onChange={this.handleGenderChange}>
-                                      <option value={gender} disabled selected>Choose your option</option>
-                                      <option value="male">Male</option>
-                                      <option value="female">Female</option>
-                                      <option value="other">Other</option>
-                                    </select>
+                                      <input placeholder="Person Name" value={email} onChange={this.handleEmailChange} id="person_name" type="text" className="myAPTxtBox validate" />
                                     </td>
-                                </tr>                                    
-                                <tr>
-                                    <td className='myProfileItemTitle'>Age Group</td>
-                                    <td colSpan="2">
-                                    <select style={{border: 'none',}} onChange={this.handleAgeChange}>
-                                      <option value={age_group} disabled selected>Choose your option</option>
-                                      <option value="14">Under-15 yrs</option>
-                                      <option value="18">16-20 yrs</option>
-                                      <option value="23">21-25 yrs</option>
-                                      <option value="27">26-30 yrs</option>
-                                      <option value="33">31-35 yrs</option>
-                                      <option value="37">36-40 yrs</option>
-                                      <option value="43">41-45 yrs</option>
-                                      <option value="47">46-50 yrs</option>
-                                      <option value="54">Above-50 yrs</option>
-                                    </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className='myProfileItemTitle'>Disability</td>
-                                    <td colSpan="2">
-                                    <select style={{border: 'none',}} onChange={this.handleDisabilityChange}>
-                                      <option value={disability} disabled selected>Choose your option</option>
-                                      <option value="mental">Mentally Disable</option>
-                                        <option value="hearing">Hearing Loss/Deafness</option>
-                                        <option value="memory">Memory Loss</option>
-                                        <option value="speak">Speech/Language Disorder</option>
-                                        <option value="vision">Vision Loss/Blindness</option>
-                                        <option value="physical">Any Physical Disability</option>
-                                        <option value="other">Others</option>
-                                        <option value="not_disabled">Not Disbaled</option>
-                                    </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className='myProfileItemTitle'>Location</td>
-                                    <td colSpan="2">
-                                        <input placeholder="Person's Location" value={location} onChange={this.handleLocationChange} id="address"  type="text" className="myAP/TxtBox validate"  />
-                                    </td>
-                                </tr>
-                                <tr>
+                                    </tr>
+                                    <tr>
                                     <td className='myProfileItemTitle'>Country</td>
                                     <td colSpan="2">
                                     <CountryDropdown
@@ -448,6 +354,19 @@ class Add_post extends Component {
                                          value={region}
                                         onChange={(val) => this.selectRegion(val)} />
                                     </td>
+                                </tr>
+                                    <tr>    
+                                    <td className='myProfileItemTitle'>Subject</td>
+                                    <td colSpan="2">
+                                      <input placeholder="Person Name" value={subject} onChange={this.handleSubjectChange} id="person_name" type="text" className="myAPTxtBox validate" />
+                                    </td>
+                                    </tr>
+
+                                <tr>
+                                    <td className='myProfileItemTitle'>Message</td>
+                                    <td colSpan="2">
+                                    <textarea id="textarea1APX" value={description} onChange={this.handleDescriptionChange} placeholder="Discription" className="materialize-textarea"></textarea>
+                                    </td>
                                 </tr>                                
                                 {/* <tr>
                                     <td className='myProfileItemTitle'>Phone #</td>
@@ -459,13 +378,8 @@ class Add_post extends Component {
                                     }
                                     </td>
                                 </tr> */}
-                                <tr>
-                                    <td className='myProfileItemTitle'>Description</td>
-                                    <td colSpan="2">
-                                    <textarea id="textarea1APX" value={description} onChange={this.handleDescriptionChange} placeholder="Discription" className="materialize-textarea"></textarea>
-                                    </td>
-                                </tr>
-                                    {
+                                    {msg_type !== 'report'?
+                                    <></>:
                                     dp_image !== ''?
                                 <tr>
                                         <td colSpan='3'>
@@ -507,7 +421,7 @@ class Add_post extends Component {
                                 </tr> */}
                                 <tr>
                                     <td colSpan="2" className="center">
-                                    <button className="btn myUpdateBtnX myBtn" onClick={()=>{this.Checker(posts_state, notifications_state)}}>Submit & Post</button>    
+                                    <button className="btn myUpdateBtnX myBtn" onClick={()=>{this.Checker(user)}}>Submit</button>    
                                     </td>
                                 </tr>
                             </table>
@@ -531,8 +445,8 @@ const mapStateToProps=(state)=>{
     return{
         user: state.users,
         posts: state.posts,
-        notifications: state.notifications
+        // notifications: state.notifications
     }
 };
 
-export default connect(mapStateToProps, {add_post, update_post, add_notification})(Add_post);
+export default connect(mapStateToProps, {send_feedback, send_report})(Feed_Back);

@@ -5,6 +5,7 @@ export default {
     //used to signup
     updateUser: 'UPDATE_USER',
     //used to update the profile
+    deleteUser: 'DELETE_USER',
 
     loginUser: 'LOGIN_USER',
     //to login or sign in

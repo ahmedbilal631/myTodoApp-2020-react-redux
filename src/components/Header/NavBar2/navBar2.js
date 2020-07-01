@@ -5,7 +5,7 @@ import './navStyle2.css';
 
 import SB_bg from '../../../media/side_bar/side_bar_bg_3.jpg';
 import SB_dp from '../../../media/dummy_profile.jpg';
-import Logo from '../../../media/logo_white.png';
+import Logo from '../../../media/final_logo.png';
 
 //redux
 import {connect} from 'react-redux';
@@ -182,15 +182,18 @@ Extract_read_notifications = (new_list)=>{
  <Link to="#email"><span className="white-text email">jdandturk@gmail.com</span></Link>
                     </div></li>
   <li className="mySN_items" onClick={this.closeSB}><Link to='/home'><i className="mySNIcon material-icons">home</i><span>Home</span></Link></li>
-  <li className="mySN_items" onClick={this.closeSB,()=>{this.Extract_read_notifications(temp)}}><Link to='/notifications'><i className="mySNIcon material-icons">notifications_active</i><span>Notifications</span><span id='myNotifyBadge' className="new badge"> {notified_post.length}</span></Link></li>
+  <li className="mySN_items" onClick={()=>{
+      this.closeSB();
+      this.Extract_read_notifications(temp);
+      }}><Link to='/notifications'><i className="mySNIcon material-icons">notifications_active</i><span>Notifications</span><span id='myNotifyBadge' className="new badge"> {notified_post.length}</span></Link></li>
   <li className="mySN_items" onClick={this.closeSB}><Link to='/search'><i className="mySNIcon material-icons">search</i><span>Search</span></Link></li>
   <li className="mySN_items" onClick={this.closeSB}><Link to='/add_post'><i className="mySNIcon material-icons">add_circle_outline</i><span>Add new post</span></Link></li>
-  <li className="mySN_items" onClick={this.closeSB}><Link to='/active_posts'><i className="mySNIcon material-icons">cast</i><span>Active posts</span></Link></li>
-  <li className="mySN_items" onClick={this.closeSB}><Link to='/resloved_posts'><i className="mySNIcon material-icons">check_box</i><span>Resolved posts</span></Link></li>
+  <li className="mySN_items" onClick={()=>{this.closeSB(); localStorage.setItem('interest', 'active')}}><Link to='/display_posts'><i className="mySNIcon material-icons">cast</i><span>Active posts</span></Link></li>
+  <li className="mySN_items" onClick={()=>{this.closeSB(); localStorage.setItem('interest', 'resolved')}}><Link to='/display_posts'><i className="mySNIcon material-icons">check_box</i><span>Resolved posts</span></Link></li>
   <li className="mySN_items" onClick={this.closeSB}><Link to='/profile'><i className="mySNIcon material-icons">account_circle</i><span>Profile</span></Link></li>
   <li className="mySN_items" onClick={this.closeSB}><Link to='/settings'><i className="mySNIcon material-icons">build</i><span>Settings</span></Link></li>
   <li className="mySN_items" onClick={this.closeSB}><Link to='/help'><i className="mySNIcon material-icons">live_help</i><span>Help?</span></Link></li>
-  <li className="mySN_items" onClick={this.closeSB}><Link to='/feedback'><i className="mySNIcon material-icons">feedback</i><span>Feedback</span></Link></li>
+  <li className="mySN_items" onClick={()=>{this.closeSB(); localStorage.setItem('isReport', null);localStorage.setItem('msg_type','feedback');}}><Link to='/feedback'><i className="mySNIcon material-icons">feedback</i><span>Feedback</span></Link></li>
   <li className="mySN_items" onClick={this.closeSB}><Link to='/about'><i className="mySNIcon material-icons">feedback</i><span>About us</span></Link></li>
   <li className="mySN_items" onClick={this.closeSB}><Link to='/signin'><i className="mySNIcon material-icons">power_settings_new</i><span>Logout</span></Link></li>
 </ul>
@@ -243,7 +246,7 @@ Extract_read_notifications = (new_list)=>{
                                     </li>
                             }
                                    <li className="myNotificationListItemX collection-item">
-                                    <Link to="/view_notifications" className='myViewNotificationsBtn'>
+                                    <Link to="/notifications" className='myViewNotificationsBtn'>
                                     <button className="btn myUpdateBtnX myBtn">View all notifications</button>
                                         </Link>
                                     </li>
@@ -251,8 +254,8 @@ Extract_read_notifications = (new_list)=>{
                           <li className="myNavItem">                           
                           <Link className="dropdown-trigger center" to="#!" data-target="dropdown1">
                           {
-                              user?
-                              <img className="circle" width='50px' style={{marginTop: '7px'}}  src={SB_dp} alt="images/yuna.jpg"  />
+                              user.dp_image !== ''?
+                              <img className="circle" width='50px' height='50px' style={{marginTop: '7px'}}  src={user.dp_image} alt="images/yuna.jpg"  />
                               :
                             <i className="material-icons">account_circle</i>
                         }

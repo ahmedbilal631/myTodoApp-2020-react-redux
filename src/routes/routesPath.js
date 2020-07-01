@@ -12,6 +12,9 @@ export const PROFILE = '/profile';
 export const DISPLAY_POSTS = '/display_posts';
 export const NOTIFICATIONS = '/notifications';
 export const SEARCH = '/search';
+export const FEEDBACK = '/feedback';
+export const SETTINGS = '/settings';
+export const HELP = '/help';
 
 
 

@@ -15,7 +15,11 @@ class NavBar extends Component {
                           {/* <img src={Logo_White} alt="Lets Find" className="responsive-img"/> */}
                       {/* </span> */}
                       <ul>
-                          <li className="myNavItem">Help?</li>
+                          <li className="myNavItem">
+                              <Link to='/help'>
+                              Help?
+                              </Link>
+                              </li>
                           <li className="myNavItem">
                               <Link to='/about'>
                               About us

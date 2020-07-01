@@ -55,7 +55,15 @@ export const updateUser =(payload)=>{
         payload
     }    
 }
-
+//...................................................
+//this is update action
+export const deleteUser =(payload)=>{
+    return{
+        type: types.updateUser,
+        payload
+    }    
+}
+//...................................................
 // to get load the stored data from database to local redux store state...
 export const loadDataUser = ()=>{
     console.log("yes call for load");

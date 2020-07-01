@@ -14,6 +14,9 @@ import EditPostPageX from '../components/Post/edit_post';
 import ProfilePage from '../components/Edit_Profile/profile';
 import DisplayPostPage from '../components/Post/display_posts_page';
 import SearchPage from '../components/Search/search';
+import FeedBackPage from '../components/Feed_Back/feed_back';
+import SettingPage from '../components/Settings/setting_page';
+import HelpPage from '../components/Help/help';
 
 //redux connection
 import {loadData} from '../redux/actions/UserAction/index';
@@ -43,17 +46,6 @@ class Routes extends React.Component {
           <Route  path={routes.ABOUT_PAGE} component={AboutPage} />
           <Route  path={routes.SIGN_IN} component={SignInPage} />
           <Route  path={routes.SIGN_UP} component={SignUpPage} />
-          </Switch>
-          {check_login === ''?
-        <Switch>
-          <Route exact path={routes.WEL_COME} component={WelComePage} />
-          <Route  path={routes.ABOUT_PAGE} component={AboutPage} />
-          <Route  path={routes.SIGN_IN} component={SignInPage} />
-          <Route  path={routes.SIGN_UP} component={SignUpPage} />
-          </Switch>
-          :        
-          <Switch>
-          {/* <Route exact path={routes.ADD_POST} component={AddPostPage} /> */}
           <Route  path={routes.ABOUT_PAGE} component={AboutPage} />
           <Route exact path={routes.HOME_PAGE} component={HomePage} />
           <Route  path={routes.ADD_POSTX} component={AddPostPageX} />
@@ -62,13 +54,14 @@ class Routes extends React.Component {
           <Route  path={routes.DISPLAY_POSTS} component={DisplayPostPage} />
           <Route  path={routes.NOTIFICATIONS} component={Notifications} />
           <Route exact path={routes.SEARCH} component={SearchPage} />
+          <Route exact path={routes.FEEDBACK} component={FeedBackPage} />
+          <Route exact path={routes.SETTINGS} component={SettingPage} />
+          <Route exact path={routes.HELP} component={HelpPage} />
           {/* <Route exact path={routes.CHECKOUT} component={CheckOutPage} /> */}
           {/* <Route exact path={routes.LEARNER_DRIVER} component={LearnerDriver} /> */}
           {/* <Route exact path={routes.DRIVING_INSTRUCTOR} component={DrivingInstructor} /> */}
           </Switch>
-        }
           
-          {/* </ BrowserRouter > */}
       </Router>
     );
   }

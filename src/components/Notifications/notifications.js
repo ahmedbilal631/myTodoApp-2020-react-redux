@@ -23,6 +23,9 @@ state =  {
 
         //..........................................    
         componentDidMount(){
+            window.jQuery(document).ready(function(){
+                window.jQuery('.sidenav').sidenav('close');
+              });
             //   this.setState({
                 //   posts: this.props.loadData(),
                 //   user: this.props.loadDataUser(),

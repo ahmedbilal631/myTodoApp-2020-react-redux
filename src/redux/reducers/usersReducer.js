@@ -23,7 +23,8 @@ const dumyId = {
   country:'Turkey',
   region: 'Ankara',
   password:'1234asdf',
-  dp_image: Dummy_Profile,
+  dp_image:                    'https://cdn.pixabay.com/photo/2016/03/27/17/40/black-and-white-1283231_960_720.jpg'
+  ,
   followed_posts: [7891779300000,7891779300009,7891779300004,7891779300006],
   notification_on: true,//about the functionality activatoin of notification
   notification_keep: [],//to store imp notifications
@@ -68,20 +69,19 @@ export default (state=dumyId, action)=>{
           case types.updateUser:
           console.log('update user from reducer', action.payload);
           let _id = action.payload.id;
-          // const index = state.findIndex((item)=>{return item.user_id === _id});
-          // state = state.filter((item)=> item.id != _id);
-          // state.push(action.payload);
           console.log('after update', state); 
           return state;
           case types.loadData:
             console.log(" data is loading," + state);
-            // let check_login = localStorage.getItem('acc_id');
-            // const indexX = state.findIndex((item)=>{return item.user_id === check_login});
-          // if(indexX !== -1){
-            // console.log('logged in user from loader', state[indexX]);
-            // return state[indexX];            
-          // }else{
-            return state
+            return state;
+            //...................................................
+            case types.deleteUser:
+              console.log('delete user from reducer', action.payload);
+              window.location.assign(window.location.hostname + '/signup');
+              // let _id = action.payload.id;
+              // console.log('after update', state); 
+              return state;
+                //...................................................
           case types.read_notification:
             let old = state.notification_read;
             // let saved_read = localStorage.getItem('saved_read_notificaitons');

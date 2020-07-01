@@ -262,7 +262,7 @@ class Display_Posts extends Component {
                                         localStorage.setItem('edit_post_code', item.post_id);
                                     }} to="/edit_post" className='center'><i className="material-icons">edit</i> Edit Post</Link>
                                     :
-                                    <Link to="#report" className='center'><i className="material-icons">flag</i> Report</Link>
+                                    <Link to="/feedback" onClick={()=>{localStorage.setItem('reported_post_id',item.post_id); localStorage.setItem('isReport','yes'); localStorage.setItem('msg_type','report');}} className='center'><i className="material-icons">flag</i> Report</Link>
                                 }
                                     {/* <Link to="/edit_post" className='right'>In-Active</Link> */}
                                 </div>

@@ -80,7 +80,9 @@ Checker= ()=>{
         this.props.loginUser({
             email: this.state.new_email,
             password: this.state.new_password
-        });
+        }).then(
+            window.location.assign('/home')
+        )
         this.setState({
             new_email: '',
             new_password: ''

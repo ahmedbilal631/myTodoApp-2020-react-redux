@@ -3,12 +3,15 @@ import NavBar from '../Header/NavBar2/navBar2';
 import SubFooter from '../Footer/Sub_Footer';
 import Footer from '../Footer/Main_Footer/footer';
 import './editProfileStyle.css';
+import SideLink from '../Side_Panel/side_links';
 
 import {Link} from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 
 import {connect} from 'react-redux';
-import {addUser, loadDataUser, updateUser} from '../../redux/actions/UserAction/index';
+import {addUser, loadDataUser, updateUser,deleteUser} from '../../redux/actions/UserAction/index';
 import Dp_Replacement from '../../media/dp_replacement.png'
+import Side_Links from '../Side_Panel/side_links';
 
 
 class Profile extends Component {
@@ -41,6 +44,9 @@ class Profile extends Component {
         console.log(this.state, 'from did mount');
     }
     componentDidMount(){
+        window.jQuery(document).ready(function(){
+            window.jQuery('.modal').modal();
+          });
         // this.loadAcc();
         this.props.loadDataUser();
         console.log(this.props, 'from did mount');
@@ -206,10 +212,34 @@ class Profile extends Component {
         //Re-enter function
         //..............................................
         //Delete account function
-        Delete_Account=(acc)=>{
-            console.log('delete account', acc.user_id);
-        }
-        //...............................................
+                        //Main search functions
+                        Delete_Acc=(user)=>{
+                            this.props.deleteUser(user);
+                            
+            
+                            console.log('called  user to delete acc.', user);
+                            toast('Account got deleted.',  {
+                                position: "bottom-left",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+            
+                            window.location.assign('/signup');
+                            // browser.history.deleteAll();
+                        }
+                            //function to close the modal
+    closeModal=()=>{
+        // alert('yes close');
+
+        window.jQuery(document).ready(function(){
+            window.jQuery('.modal').sidenav('close');
+          });   
+}
+//...........................................
 
     adder=()=>{
     console.log(this.state);
@@ -223,7 +253,7 @@ class Profile extends Component {
     //..................................................
 
     render() {
-        let acc = this.props.recievedUsers[0];
+        let acc = this.props.user;
         console.log(acc);
         return (
               <div className='mX'>
@@ -233,11 +263,15 @@ class Profile extends Component {
                         PROFILE
                     </p>
                     <div  className="dp_Box_Style">
-                            {acc.profile_image == ''? 
+                            {acc.profile_image === ''? 
                         // <p className="place_for_dp_Text">DP</p>    
-                        <img src={Dp_Replacement} alt="Profile Image" className='dp_style responsive-img'/>
+                        <img width="150px"
+                        src={
+                        Dp_Replacement
+                        }
+                         alt="Profile Image" className='dp_styleX circle responsive-img'/>
                         :
-                        <img src={acc.dp_image} width="150px" alt="Profile Image" className='dp_styleX circle responsive-img'/>
+                        <img src={acc.dp_image} width="150px" height="300px" alt="Profile Image" className='dp_styleX circle responsive-img'/>
                     }
                             </div>
 
@@ -365,27 +399,27 @@ class Profile extends Component {
                                 </tr>
                                 <tr>
                                     <td colSpan="2" className="center">
-                                    <button className="btn myUpdateBtnX myBtn" onClick={()=>{this.Delete_Account(acc)}}>Delete Account</button>    
+                                    <button data-target="modal4" className="btn myBtn modal-trigger" >Delete Account</button>    
                                     </td>
                                 </tr>
                             </table>
                             </div>
                         </div>
                         <div className="col s12 m4 l4 xl2">
-                            <div className="mySideLinksTitle">
-                                Futher
-                            </div>
-                            <div className="mySideLinksList">
-                                <ul>
-                                    <li><Link to='#your_posts'>Your posts</Link></li>
-                                    <li><Link to='#follow_up'>Follow up</Link></li>
-                                    <li><Link to='#notifications'>Notifications</Link></li>
-                                    <li><Link to='#settings'>Settings</Link></li>
-                                    <li><Link to='#help'>Help?</Link></li>
-                                    <li><Link to='#logout'>Logout</Link></li>
-                                </ul>
-                            </div>
+                                <Side_Links/>
                         </div>
+                        <div>
+                         <div id="modal4" className="modal">
+                           <div className="modal-content center">
+                              <h4 className="yellow text-red bold">WARNING!</h4>
+                              <p>Are you really want to delete your account?</p>
+                          </div>
+                         <div className="modal-footer">
+                            <Link to="#!" onClick={this.closeModal} className="modal-close waves-effect waves-green btn-flat">Cancel</Link>
+                            <p onClick={()=>{this.Delete_Acc(acc)}} className="modal-close waves-effect waves-green btn-flat">Confirm</p>
+                         </div>
+                        </div>
+                            </div>
                     </div>
                 </div>
 
@@ -399,8 +433,8 @@ class Profile extends Component {
 //here the redux data will be converted into props
 const mapStateToProps=(state)=>{
     return{
-        recievedUsers: state.users
+        user: state.users
     }
 };
 
-export default connect(mapStateToProps, {addUser, loadDataUser, updateUser})(Profile);
+export default connect(mapStateToProps, {addUser, loadDataUser, updateUser, deleteUser})(Profile);

@@ -21,6 +21,20 @@ let initial_notification = [
     notification_date: 2020628, //for new notification identificaiton
     notification_status: 'posted', // posted , updated
   },
+  // {
+  //   notification_date: 2020628,
+  //   notification_id: 786002,
+  //   notification_status: "posted",
+  //   post_creator_id: "xyz12x",
+  //   post_id: 7891779300002,
+  // },
+  // {
+  //   notification_date: 2020628,
+  //   notification_id: 786003,
+  //   notification_status: "posted",
+  //   post_creator_id: "xyz12d",
+  //   post_id: 7891779300003,
+  // },
 ]
 // let dum_state = initial_notification;
 let initial_state = [];

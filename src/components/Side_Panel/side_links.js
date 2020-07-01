@@ -81,9 +81,10 @@ class Side_Links extends Component {
                                 <ul className="mySideLinksStyle">
                                     <li><Link to='/notifications'>Notifications</Link></li>
                                     <li><Link to='/search'>Search</Link></li>
-                                    <li><Link to='#settings'>Settings</Link></li>
-                                    <li><Link to='#help'>Help?</Link></li>
-                                    <li><Link to='#logout'>Logout</Link></li>
+                                    <li><Link to='/settings'>Settings</Link></li>
+                                    <li><Link to='/help'>Help?</Link></li>
+                                    <li  onClick={this.closeSB, ()=>{localStorage.setItem('isReport', null);localStorage.setItem('msg_type','feedback');}}><Link to='/feedback'><span>Feedback</span></Link></li>
+                                    <li><Link to='/signin'>Logout</Link></li>
                                 </ul>
                             </div>
   
